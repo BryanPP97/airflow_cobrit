@@ -32,14 +32,15 @@ def process_sms(page):
     df_sorted = df.sort_values('Fecha', ascending=False)
     df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
     df_today = df_sorted.loc[df_sorted.normalised_date ==yesterday]
+    df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
 
     cartera = "DIMEX"
     get_positive(df_today, cartera, page)
 
 def email():
-    correos = ['ia_1@coperva.net']
+    correos = ['ia_1@coperva.net', 'jmontan@coperva.com']
     mensaje = "Buen día\nLes comparto las cuentas que tienen prioridad para el día de hoy\n\nSaludos,\nAlberto Montán."
-    dmx_path = '/opt/airflow/outputs/dimex.csv'
+    dmx_path = '/opt/airflow/outputs/Gepard/DIMEX.csv'
     rappi_path = '/opt/airflow/outputs/rappi.csv'
     send_email(correos, mensaje, dmx_path)
     #send_email(correos, mensaje, rappi_path)
@@ -185,7 +186,7 @@ def get_positive(df, cartera, portal):
     df_0 = df.copy()
     df_0[cartera] = df_0.Proyecto.apply(lambda X: 1 if cartera in X else 0)
     
-    df_1 = pd.read_csv("/opt/airflow/dags/utils/Spanish-NRC-EmoLex.csv")
+    df_1 = pd.read_csv("/opt/airflow/files/Spanish-NRC-EmoLex.csv")
     df_1.rename(columns={'anger':'enojo', 'anticipation':'anticipacion', 'disgust':'disgusto', 
                   'fear':'miedo', 'joy':'disfrutar', 'negative':'negativo',
        'positive':'positivo', 'sadness':'tristeza', 'surprise':'sorpresa', 
@@ -198,6 +199,9 @@ def get_positive(df, cartera, portal):
     dft=dft.fillna(0)
     d=dft.groupby(by=['Telefono','MensajeRespuesta' , 'Proyecto']).sum()
     posi=pd.DataFrame(d[(d['positivo']>0) & (d['enojo']==0)&(d['positivo']>d['negativo'])])
+    ####
+    posi.to_csv(f"{save_paht}{cartera}.csv", index=False)
+    ####
     if posi.shape[0] > 0:
         telefonos = posi.reset_index().Telefono.unique()
         phones = "("
@@ -210,5 +214,5 @@ def get_positive(df, cartera, portal):
         WHERE CLIENTE = 'RAPPI' 
         AND tel in {phones}
         """)
-        result = run_query(query)
-        result.to_csv(f"{save_paht}{cartera}.csv", index=False)
+        #result = run_query(query)
+        #result.to_csv(f"{save_paht}{cartera}.csv", index=False)
