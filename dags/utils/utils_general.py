@@ -80,7 +80,6 @@ def get_positive(df, portal, cartera, words):
     dft=dft.fillna(0)
     d=dft.groupby(by=['Telefono','MensajeRespuesta' , 'Proyecto']).sum()
     posi=pd.DataFrame(d[(d['positivo']>0) & (d['enojo']==0)&(d['positivo']>d['negativo'])])
-    print("Positive sms", posi.shape)
     if posi.shape[0] > 0:
         telefonos = posi.reset_index().Telefono.unique()
         phones = "("
@@ -90,7 +89,7 @@ def get_positive(df, portal, cartera, words):
         query = (f"""
         SELECT CUENTA, tel
         FROM [dbo].[TB_TELEFONOS]
-        WHERE CLIENTE = 'RAPPI' 
+        WHERE CLIENTE = '{cartera}'
         AND tel in {phones}
         """)
         result = run_query(query)
