@@ -47,24 +47,14 @@ def run_query(query, cnxn_str=None):
     cnxn.close()
     return data
 
-def send_email(receivers, body, filename, cartera):
-    load_dotenv(find_dotenv()) # Load the .env file.
-    password = os.getenv("ACCOUNT_PASSWORD")
-    yag = yagmail.SMTP("jmontan@coperva.com", password)
-    yag.send(
-        to=receivers,
-        subject=f"Cuentas con priorirdad {cartera}",
-        contents=body, 
-        attachments=filename,
-    )
-
 def get_positive(df, portal, cartera, words):
     save_paht = f'/opt/airflow/outputs/{portal}/'
     ## Busca por las palabras
     df_0 = df.copy()
     df_0[cartera] = 0
     for word in words:
-        df_0[cartera] = df_0.Proyecto.apply(lambda X: 1 if word in X else X)
+        temp = df_0.Proyecto.apply(lambda X: 1 if word in X else 0)
+        df_0[cartera] = df_0[cartera] + temp
     
     ## Se carga datos para obtener positivos
     df_1 = pd.read_csv("/opt/airflow/files/Spanish-NRC-EmoLex.csv")
@@ -73,7 +63,7 @@ def get_positive(df, portal, cartera, words):
        'positive':'positivo', 'sadness':'tristeza', 'surprise':'sorpresa', 
                   'trust':'confianza', 'Spanish Word':'token'}, inplace=True)
     
-    df_2 = df_0.loc[df_0[cartera] == 1]
+    df_2 = df_0.loc[df_0[cartera] > 0]
     df_2.rename(columns={'Mensaje': 'MensajeRespuesta'}, inplace=True)
     dff=genera_token(df_2, 'MensajeRespuesta')
     dft=dff.merge(df_1, how='left', on='token')
@@ -107,6 +97,19 @@ def email(portal):
     for key in parsed_json.keys():
         cartera = key
         correos = parsed_json.get(key)['emails']
+        cc = parsed_json.get(key)['cc']
         path_cartera = f"{cpath}{cartera}.csv"
         if os.path.exists(path_cartera):
-            send_email(correos, mensaje, path_cartera, cartera)
+            send_email(correos, cc, mensaje, path_cartera, cartera)
+
+def send_email(receivers, cc, body, filename, cartera):
+    load_dotenv(find_dotenv()) # Load the .env file.
+    password = os.getenv("ACCOUNT_PASSWORD")
+    yag = yagmail.SMTP("jmontan@coperva.com", password)
+    yag.send(
+        to=receivers,
+        cc=cc,
+        subject=f"Cuentas con priorirdad {cartera}",
+        contents=body, 
+        attachments=filename,
+    )
