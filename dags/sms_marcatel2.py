@@ -40,10 +40,5 @@ with DAG(
         python_callable=email,
         op_kwargs={'portal': 'Marcatel'}
     )
-    cleaner = PythonOperator(
-        task_id="cleaner",
-        python_callable=clean_folder,
-        op_kwargs={'folder': '/opt/airflow/outputs/Marcatel/'}
-    )
 
     mailing
