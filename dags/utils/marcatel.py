@@ -65,23 +65,23 @@ def process_sms():
     i_path = "/opt/airflow/outputs/Marcatel/"
     
     ## Get last business day
-    today = date.today()
+    #today = date.today()
     #yesterday = ( today - pd.tseries.offsets.BDay(1) ).normalize()
-    yesterday = pd.to_datetime(today).normalize()
+    #yesterday = pd.to_datetime(today).normalize()
     ###
 
     for file in os.listdir(i_path):
         if file.endswith(".xlsx"):
             d_path = os.path.join(i_path, file)
             print(d_path)
-    df = pd.read_excel(d_path, usecols=["Telefono", "MensajeRespuesta", "NombreEnvio", "FechaRespuesta"])
-    df.rename(columns={"NombreEnvio":"Proyecto", "FechaRespuesta":"Fecha"}, inplace=True)
+    df = pd.read_excel(d_path, usecols=["Telefono", "MensajeRespuesta", "NombreEnvio"])#, "FechaRespuesta"])
+    df.rename(columns={"NombreEnvio":"Proyecto"}, inplace=True) #"FechaRespuesta":"Fecha"
 
-    df.Fecha = pd.to_datetime( df.Fecha )
-    df_sorted = df.sort_values('Fecha', ascending=False)
-    df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
-    df_today = df_sorted.loc[df_sorted.normalised_date ==yesterday]
-    df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
+    #df.Fecha = pd.to_datetime( df.Fecha )
+    #df_sorted = df.sort_values('Fecha', ascending=False)
+    #df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
+    #df_today = df_sorted.loc[df_sorted.normalised_date ==yesterday]
+    #df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
     ## Read json File to get names
     with open('/opt/airflow/files/jsonFile.json') as f:
         maps = f.read()
@@ -90,4 +90,4 @@ def process_sms():
     for key in parsed_json.keys():
         cartera = key
         words = parsed_json.get(key)['words']
-        get_positive(df_today, page, cartera, words)
+        get_positive(df, page, cartera, words) #df_today
