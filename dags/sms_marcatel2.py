@@ -46,4 +46,4 @@ with DAG(
         op_kwargs={'folder': '/opt/airflow/outputs/Marcatel/'}
     )
 
-    mailing >> cleaner
+    mailing
