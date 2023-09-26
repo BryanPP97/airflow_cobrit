@@ -1,0 +1,19 @@
+{
+    "DIMEX": 
+    {"emails": ["cvarela@coperva.com", "sbalcazar@coperva.com", "ia_1@coperva.net"], "words": ["DIMEX", "DDIMEX"]}, 
+
+    "RAPPI": 
+    {"emails": ["fmayen@coperva.com", "eaguilar@coperva.com", "ia_1@coperva.net"], "words": ["RAPPI", "RRAPI"]}, 
+
+    "BANORTE": 
+    {"emails": ["fmayen@coperva.com", "coordinacion_banorte@coperva.com", "ia_1@coperva.net"], "words": ["BANORTE"]},
+   
+    "HSBC":
+    {"emails": ["cvargas@coperva.com", "vramos@coperva.com", "coordinacion_hsbc@coperva.com", "ia_1@coperva.net"], "words": ["HSBC"]},
+
+    "IZZI":
+    {"emails": ["mestevez@coperva.com", "ecabrera@coperva.com", "ia_1@coperva.net"], "words": ["IZZI"]},
+
+    "TOTALPLAY":
+    {"emails": ["mestevez@coperva.com", "jtorres@coperva.com", "ia_1@coperva.net"], "words": ["TOTALPLAY"]}
+}
