@@ -62,4 +62,4 @@ with DAG(
         op_kwargs={'folder': '/opt/airflow/outputs/Gepard/'}
     )
 
-    scraper >> processor >> mailing >> cleaner
+    cleaner >> scraper >> processor >> mailing
