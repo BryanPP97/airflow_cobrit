@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import pendulum
 
 #import scrapers
 from utils.gepard import gepard_automation, process_sms
@@ -33,13 +34,13 @@ default_args={
 }
 
 ## Create DAG
-
+local_tz = pendulum.timezone("America/Mexico_City")
 with DAG(
     "SMS_GEPARD",
     default_args=default_args,
     description="Sends email for positive sms using gepard data",
-    start_date= datetime(year=2023, month=9, day=21),
-    schedule_interval="0 8 * * 1-5",
+    start_date= datetime(year=2023, month=9, day=21, tzinfo=local_tz),
+    schedule_interval="0 9 * * 1-5",
     tags = ['sms']
 ) as dag:
     scraper = PythonOperator(
