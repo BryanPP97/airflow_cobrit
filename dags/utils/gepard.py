@@ -7,6 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import os
 from datetime import date
+from zoneinfo import ZoneInfo
+import datetime
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
 from utils.utils_general import get_positive
@@ -63,6 +65,7 @@ def process_sms():
     
     ## Get last business day
     today = date.today()
+    #today = datetime.datetime.now(ZoneInfo("America/Mexico_City"))
     yesterday = ( today - pd.tseries.offsets.BDay(1) ).normalize()
 
     df = pd.read_csv(path)
