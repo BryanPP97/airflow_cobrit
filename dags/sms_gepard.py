@@ -51,15 +51,15 @@ with DAG(
         task_id='processor',
         python_callable=process_sms
     )
-    mailing = PythonOperator(
-        task_id="mailing", 
-        python_callable=email,
-        op_kwargs={'portal': 'Gepard'}
-    )
+    #mailing = PythonOperator(
+    #    task_id="mailing", 
+    #    python_callable=email,
+    #    op_kwargs={'portal': 'Gepard'}
+    #)
     cleaner = PythonOperator(
         task_id="cleaner",
         python_callable=clean_folder,
         op_kwargs={'folder': '/opt/airflow/outputs/Gepard/'}
     )
 
-    cleaner >> scraper >> processor >> mailing
+    cleaner >> scraper >> processor# >> mailing
