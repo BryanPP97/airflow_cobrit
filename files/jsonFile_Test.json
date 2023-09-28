@@ -1,0 +1,31 @@
+{
+    "DIMEX": 
+    {"emails": ["jmontan@coperva.com"], 
+    "words": ["DIMEX", "DDIMEX"],
+    "cc": []}, 
+
+    "RAPPI": 
+    {"emails": ["jmontan@coperva.com"], 
+    "words": ["RAPPI", "RRAPI"],
+    "cc": []}, 
+
+    "BANORTE": 
+    {"emails": ["jmontan@coperva.com"], 
+    "words": ["BANORTE"],
+    "cc": []},
+   
+    "HSBC":
+    {"emails": ["jmontan@coperva.com"], 
+    "words": ["HSBC"],
+    "cc": []},
+
+    "IZZI":
+    {"emails": ["jmontan@coperva.com"], 
+    "words": ["IZZI"],
+    "cc": []},
+
+    "TOTALPLAY":
+    {"emails": ["jmontan@coperva.com"], 
+    "words": ["TOTALPLAY"],
+    "cc": []}
+}
