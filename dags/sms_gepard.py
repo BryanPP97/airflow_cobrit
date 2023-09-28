@@ -17,8 +17,8 @@ default_args={
     "email": ["jmontan@coperva.com"],
     "email_on_failure": True,
     "email_on_retry": False,
-    "retries": 2,
-    "retry_delay": timedelta(minutes=5),
+    "retries": 1,
+    "retry_delay": timedelta(minutes=1),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
@@ -51,15 +51,15 @@ with DAG(
         task_id='processor',
         python_callable=process_sms
     )
-    #mailing = PythonOperator(
-    #    task_id="mailing", 
-    #    python_callable=email,
-    #    op_kwargs={'portal': 'Gepard'}
-    #)
+    mailing = PythonOperator(
+        task_id="mailing", 
+        python_callable=email,
+        op_kwargs={'portal': 'Gepard'}
+    )
     cleaner = PythonOperator(
         task_id="cleaner",
         python_callable=clean_folder,
         op_kwargs={'folder': '/opt/airflow/outputs/Gepard/'}
     )
 
-    cleaner >> scraper >> processor# >> mailing
+    cleaner >> scraper >> processor >> mailing
