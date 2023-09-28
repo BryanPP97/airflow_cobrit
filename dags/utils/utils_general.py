@@ -84,7 +84,20 @@ def get_positive(df, portal, cartera, words):
         """)
         result = run_query(query)
         if result.shape[0] > 0:
-            result.to_csv(f"{save_paht}{cartera}.csv", index=False)
+            final = add_message(result, df_2)
+            final.to_csv(f"{save_paht}{cartera}.csv", index=False)
+
+def add_message(result, original):
+    df_1 = result.copy()
+    df_2 = original.copy()
+    smss = list()
+
+    for row in df_1.iterrows():
+        phone = row.tel
+        message = df_2.loc[ df_2.Telefono == phone ].MensajeRespuesta.values[0]
+        smss.append(message)
+    df_1["Mensaje"] = smss
+    return df_1
 
 def email(portal):
     cpath = f'/opt/airflow/outputs/{portal}/'
