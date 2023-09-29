@@ -101,6 +101,8 @@ services:
     restart: always
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/outputs:/opt/airflow/outputs
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
 
   postgres:
     image: postgres:13
