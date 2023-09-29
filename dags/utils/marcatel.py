@@ -24,7 +24,7 @@ def marcatel_automation():
    
     # Configuración para evitar notificaciones
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
+    #options.add_argument("window-size=1200x600")
     chrome_options.add_experimental_option("prefs", {
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
     "download.directory_upgrade": True,
@@ -32,14 +32,9 @@ def marcatel_automation():
     #"profile.default_content_settings.popups":0,
     "download.default_directory":"/opt/airflow/outputs/Marcatel/"})
     # Configuración para ingresar al explorador
+    
     remote_webdriver = 'remote_chromedriver'
-    
-    
-    #https://stackoverflow.com/questions/45323271/how-to-run-selenium-with-chrome-in-docker
-    #with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
-    #http://chrome:4444/wd/hub
-    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", options=chrome_options)
-    #driver = webdriver.Chrome(options = chrome_options)
+    driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
     driver.get(url)
     wait = WebDriverWait(driver, 10)
     user = wait.until(EC.presence_of_element_located((By.ID, "usuario")))

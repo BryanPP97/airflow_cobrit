@@ -25,9 +25,9 @@ with DAG(
     "SHF_Scraper",
     default_args=default_args,
     description="Download shf data",
-    start_date= datetime(year=2023, month=9, day=27, tzinfo=local_tz),
+    start_date= datetime(year=2023, month=9, day=29, tzinfo=local_tz),
     schedule_interval="@monthly",
-    tags = ['sms']
+    tags = ['scraper', 'data']
 ) as dag:
     scraper = PythonOperator(
         task_id="scraper", 

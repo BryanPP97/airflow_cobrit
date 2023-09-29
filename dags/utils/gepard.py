@@ -25,7 +25,8 @@ def gepard_automation():
     url = "https://www.message-center.com.mx/"
     # Configuración para evitar notificaciones
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_experimental_option("prefs", {
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
     "download.directory_upgrade": True,
@@ -33,10 +34,10 @@ def gepard_automation():
     "profile.default_content_settings.popups":0,
     "download.default_directory":"/opt/airflow/outputs/Gepard/"
     })
-    remote_webdriver = 'remote_chromedriver'
-    #with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+    
     # Configuración para ingresar al explorador
-    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", options=chrome_options)
+    remote_webdriver = 'remote_chromedriver'
+    driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
     #driver = webdriver.Chrome(options = chrome_options)
     driver.get(url)
     wait = WebDriverWait(driver, 10)

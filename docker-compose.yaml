@@ -52,7 +52,6 @@ x-airflow-common:
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.1-python3.11}
   build: .
-  shm_size: '2gb'
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -91,32 +90,19 @@ x-airflow-common:
 
 services:
 ## https://stackoverflow.com/questions/75842155/how-to-use-selenium-with-chromedriver-in-apache-airflow-in-docker
-  
-  selenium:
-    container_name: remote_chromedriver
-    image: seleniarm/standalone-chromium:latest
-    #image: selenium/standalone-firefox
-    #image: selenium/standalone-chrome:latest
-    shm_size: 3g
-    ports:
-      - 4444:4444
-    restart: always
-
     # https://stackoverflow.com/questions/61805008/using-selenium-standalone-chrome-in-docker-compose-connecting-with-pythons-sele
     #http://chrome:4444/wd/hub
-    #chrome:
-    #    image: selenium/standalone-chrome:latest
-    #    hostname: chrome
-    #    networks:
-    #      - web
-    #    privileged: true
-    #    shm_size: 2g
-    #framework:
-    #    build: .
-    #    networks:
-    #        - web
-    #    depends_on: 
-    #        - chrome
+  selenium:
+    container_name: remote_chromedriver
+    image: selenium/standalone-chrome:latest
+    ports:
+      - 4444:4444
+    shm_size: 2g
+    restart: always
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/outputs:/opt/airflow/outputs
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
 
   postgres:
     image: postgres:13
