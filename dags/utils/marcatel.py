@@ -31,34 +31,36 @@ def marcatel_automation():
     #"profile.default_content_settings.popups":0,
     "download.default_directory":"/opt/airflow/outputs/Marcatel/"})
     # Configuración para ingresar al explorador
-    driver = webdriver.Chrome(options = chrome_options)
-    driver.get(url)
-    wait = WebDriverWait(driver, 10)
-    user = wait.until(EC.presence_of_element_located((By.ID, "usuario")))
-    user.click()
-    user.send_keys(userid)
-    contra = wait.until(EC.presence_of_element_located((By.ID, "contrasena")))
-   
-    # Pasar credenciales
-    contra.click()
-    contra.send_keys(passwo)
-    init_button = wait.until(EC.element_to_be_clickable((By.ID, "btnini")))
-    init_button.click()
-    time.sleep(30)
-    # Abrir ventana de reportes SMS
-    # Redirecciona a la URL deseada
-    driver.get("https://tink.marcatel.com.mx/Reportes/wfReporteRespuestas.aspx")
-    # Espera unos segundos antes de cerrar el navegador
-    time.sleep(30)
+    remote_webdriver = 'remote_chromedriver'
+    with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+    #driver = webdriver.Chrome(options = chrome_options)
+        driver.get(url)
+        wait = WebDriverWait(driver, 10)
+        user = wait.until(EC.presence_of_element_located((By.ID, "usuario")))
+        user.click()
+        user.send_keys(userid)
+        contra = wait.until(EC.presence_of_element_located((By.ID, "contrasena")))
+    
+        # Pasar credenciales
+        contra.click()
+        contra.send_keys(passwo)
+        init_button = wait.until(EC.element_to_be_clickable((By.ID, "btnini")))
+        init_button.click()
+        time.sleep(30)
+        # Abrir ventana de reportes SMS
+        # Redirecciona a la URL deseada
+        driver.get("https://tink.marcatel.com.mx/Reportes/wfReporteRespuestas.aspx")
+        # Espera unos segundos antes de cerrar el navegador
+        time.sleep(30)
 
-    reporte = wait.until(EC.element_to_be_clickable((By.ID, "generarReporte")))
-    reporte.click()
-    time.sleep(30)
-    exportar = driver.find_element(By.ID, "excel")
-    driver.execute_script("arguments[0].scrollIntoView();", exportar)
-    exportar.click()
-    time.sleep(10)
-    driver.quit()
+        reporte = wait.until(EC.element_to_be_clickable((By.ID, "generarReporte")))
+        reporte.click()
+        time.sleep(30)
+        exportar = driver.find_element(By.ID, "excel")
+        driver.execute_script("arguments[0].scrollIntoView();", exportar)
+        exportar.click()
+        time.sleep(10)
+        driver.quit()
 
 def process_sms():
     page = "Marcatel"
