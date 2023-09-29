@@ -91,18 +91,13 @@ x-airflow-common:
 
 services:
 ## https://stackoverflow.com/questions/75842155/how-to-use-selenium-with-chromedriver-in-apache-airflow-in-docker
-  chrome:
-      image: selenium/standalone-chrome:latest
-      hostname: chrome
-      privileged: true
-      shm_size: 2g
-      restart: always
-      volumes:
-        - ./downloads:/tmp
-  framework:
-      build: .
-      depends_on:
-          - chrome
+  selenium:
+    container_name: remote_chromedriver
+    image: seleniarm/standalone-chromium:latest
+    shm_size: 3g
+    ports:
+      - 4444:4444
+    restart: always
 
   postgres:
     image: postgres:13
