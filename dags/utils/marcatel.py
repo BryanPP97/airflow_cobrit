@@ -47,12 +47,12 @@ def marcatel_automation():
     contra.send_keys(passwo)
     init_button = wait.until(EC.element_to_be_clickable((By.ID, "btnini")))
     init_button.click()
-    time.sleep(30)
+    time.sleep(10)
         # Abrir ventana de reportes SMS
         # Redirecciona a la URL deseada
     driver.get("https://tink.marcatel.com.mx/Reportes/wfReporteRespuestas.aspx")
         # Espera unos segundos antes de cerrar el navegador
-    time.sleep(30)
+    time.sleep(10)
 
     reporte = wait.until(EC.element_to_be_clickable((By.ID, "generarReporte")))
     reporte.click()
