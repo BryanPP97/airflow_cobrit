@@ -86,7 +86,7 @@ def get_positive(df, portal, cartera, words):
         if result.shape[0] > 0:
             final = add_message(result, df_2)
             final.CUENTA = final.CUENTA.astype(str)
-            final.to_csv(f"{save_paht}{cartera}.csv", index=False)
+            final.to_excel(f"{save_paht}{cartera}.xlsx", index=False)
 
 def add_message(result, original):
     df_1 = result.copy()
@@ -114,7 +114,7 @@ def email(portal):
         cartera = key
         correos = parsed_json.get(key)['emails']
         cc = parsed_json.get(key)['cc']
-        path_cartera = f"{cpath}{cartera}.csv"
+        path_cartera = f"{cpath}{cartera}.xlsx"
         if os.path.exists(path_cartera):
             send_email(correos, cc, mensaje, path_cartera, cartera)
 
