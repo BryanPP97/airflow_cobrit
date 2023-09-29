@@ -14,6 +14,7 @@ import pandas as pd
 from utils.utils_general import get_positive
 import json
 import warnings
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 warnings.filterwarnings('ignore')
 
 def gepard_automation():
@@ -33,33 +34,34 @@ def gepard_automation():
     "download.default_directory":"/opt/airflow/outputs/Gepard/"
     })
     remote_webdriver = 'remote_chromedriver'
-    with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+    #with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
     # Configuración para ingresar al explorador
+    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", options=chrome_options)
     #driver = webdriver.Chrome(options = chrome_options)
-        driver.get(url)
-        wait = WebDriverWait(driver, 10)
+    driver.get(url)
+    wait = WebDriverWait(driver, 10)
 
         # Configurar credenciales
-        user = driver.find_element(By.ID,'Usr')
-        user.send_keys(userid)
-        password = driver.find_element(By.ID, 'Pass')
-        password.send_keys(passwo)
-        ingresar = driver.find_element(By.CLASS_NAME, 'cssButtonMn')
-        ingresar.click()
-        time.sleep(10)
+    user = driver.find_element(By.ID,'Usr')
+    user.send_keys(userid)
+    password = driver.find_element(By.ID, 'Pass')
+    password.send_keys(passwo)
+    ingresar = driver.find_element(By.CLASS_NAME, 'cssButtonMn')
+    ingresar.click()
+    time.sleep(10)
 
         # Ir a mensajes
-        mensajes = driver.find_element(By.XPATH, '//*[@id="MenuPanel"]/table/tbody/tr/td[2]/img')
-        mensajes.click()
-        time.sleep(5)
+    mensajes = driver.find_element(By.XPATH, '//*[@id="MenuPanel"]/table/tbody/tr/td[2]/img')
+    mensajes.click()
+    time.sleep(5)
         # Agregar datos
-        buscar = driver.find_element(By.CLASS_NAME, 'cssBtn')
-        buscar.click()
+    buscar = driver.find_element(By.CLASS_NAME, 'cssBtn')
+    buscar.click()
         # Exportar Excel
-        export = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'img[title="Exportar a Excel..."]')))
-        export.click()
-        time.sleep(10)
-        driver.quit()
+    export = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'img[title="Exportar a Excel..."]')))
+    export.click()
+    time.sleep(10)
+    driver.quit()
 
 def process_sms():
     page = "Gepard"
