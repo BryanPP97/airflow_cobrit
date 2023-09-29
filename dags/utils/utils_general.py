@@ -106,7 +106,7 @@ def email(portal):
     cpath = f'/opt/airflow/outputs/{portal}/'
     mensaje = "Buen día\nLes comparto las cuentas que tienen prioridad para el día de hoy\n\nSaludos,\nAlberto Montán."
     ## Read json File to get names
-    with open('/opt/airflow/files/jsonFile_Test.json') as f:
+    with open('/opt/airflow/files/jsonFile.json') as f:
         maps = f.read()
         parsed_json = json.loads(maps)
     ## Iterates over names
