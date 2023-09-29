@@ -13,59 +13,62 @@ import requests
 import PyPDF2
 
 def ift_scraper():
-    url = "https://www.gob.mx/shf/documentos/indice-shf-de-precios-de-la-vivienda-en-mexico-2021-a-2025?state=published"
-    
     chrome_options = Options()
     chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
+    #chrome_options.add_argument('--no-sandbox')
     #chrome_options.add_argument('--disable-dev-shm-usage')   
     chrome_options.add_experimental_option("prefs", {
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
     "download.directory_upgrade": True,
     "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
     #"download.default_directory":"/opt/airflow/outputs/shf/"
-})
-    # Configuración para ingresar al explorador
-    driver = webdriver.Chrome(options = chrome_options)
-    driver.get(url)
-    wait= WebDriverWait(driver, 10)
-    
-    # Encuentra todos los elementos li con la clase "clearfix documents"
-    document_elements = driver.find_elements(By.CSS_SELECTOR, "li.clearfix.documents")
-    
-    # Verifica si hay al menos un elemento
-    if document_elements:
-        # Encuentra el primer elemento de la lista
-        first_document = document_elements[0]
+    })
+    remote_webdriver = 'remote_chromedriver'
+    with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+    # Scraping part
+        url = "https://www.gob.mx/shf/documentos/indice-shf-de-precios-de-la-vivienda-en-mexico-2021-a-2025?state=published"
+
+        # Configuración para ingresar al explorador
+        #driver = webdriver.Chrome(options = chrome_options)
+        driver.get(url)
+        wait= WebDriverWait(driver, 10)
         
-        # Encuentra botón de descarga
-        pdf_link = first_document.find_element(By.CSS_SELECTOR, "a[href$='.pdf']")
+        # Encuentra todos los elementos li con la clase "clearfix documents"
+        document_elements = driver.find_elements(By.CSS_SELECTOR, "li.clearfix.documents")
         
-        # Obtiene el enlace del atributo href
-        pdf_url = pdf_link.get_attribute("href")
-        
-        # Abre el enlace en una nueva ventana
-        driver.execute_script("window.open('" + pdf_url + "', '_blanck');")
-        
-        # Cambia el enfoque a la nueva ventana
-        driver.switch_to.window(driver.window_handles[-1])
-        
-        # Obtener URL actual
-        url_actual = driver.current_url
-        print("URL actual", url_actual)
-        
-        # Ruta destino
-        ruta_destino = "/opt/airflow/outputs/shf/SHF.pdf"
-        
-        # Realiza la solicitud HTTP para descargar el archivo
-        response=requests.get(url_actual)
-        
-        # Verifica si la descarga fue exitosa (código de estado 200)
-        if response.status_code == 200:
-            # Abre un archivo en modo binario y guarda el contenido del PDF
-            with open(ruta_destino, 'wb') as pdf_file:
-                pdf_file.write(response.content)
-    driver.quit()
+        # Verifica si hay al menos un elemento
+        if document_elements:
+            # Encuentra el primer elemento de la lista
+            first_document = document_elements[0]
+            
+            # Encuentra botón de descarga
+            pdf_link = first_document.find_element(By.CSS_SELECTOR, "a[href$='.pdf']")
+            
+            # Obtiene el enlace del atributo href
+            pdf_url = pdf_link.get_attribute("href")
+            
+            # Abre el enlace en una nueva ventana
+            driver.execute_script("window.open('" + pdf_url + "', '_blanck');")
+            
+            # Cambia el enfoque a la nueva ventana
+            driver.switch_to.window(driver.window_handles[-1])
+            
+            # Obtener URL actual
+            url_actual = driver.current_url
+            print("URL actual", url_actual)
+            
+            # Ruta destino
+            ruta_destino = "/opt/airflow/outputs/shf/SHF.pdf"
+            
+            # Realiza la solicitud HTTP para descargar el archivo
+            response=requests.get(url_actual)
+            
+            # Verifica si la descarga fue exitosa (código de estado 200)
+            if response.status_code == 200:
+                # Abre un archivo en modo binario y guarda el contenido del PDF
+                with open(ruta_destino, 'wb') as pdf_file:
+                    pdf_file.write(response.content)
+        driver.quit()
 
 
 def pdf_convert():
