@@ -15,8 +15,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 def ift_scraper():
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    #chrome_options.add_argument('--no-sandbox')
+    #chrome_options.add_argument('--headless')
     #chrome_options.add_argument('--disable-dev-shm-usage')   
     chrome_options.add_experimental_option("prefs", {
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
@@ -24,14 +23,13 @@ def ift_scraper():
     "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
     #"download.default_directory":"/opt/airflow/outputs/shf/"
     })
+    
     remote_webdriver = 'remote_chromedriver'
-    #with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
-    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", options=chrome_options)
+    driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
     # Scraping part
     url = "https://www.gob.mx/shf/documentos/indice-shf-de-precios-de-la-vivienda-en-mexico-2021-a-2025?state=published"
-
-        # Configuración para ingresar al explorador
-        #driver = webdriver.Chrome(options = chrome_options)
+    # Configuración para ingresar al explorador
+    #driver = webdriver.Chrome(options = chrome_options)
     driver.get(url)
     wait= WebDriverWait(driver, 10)
         
