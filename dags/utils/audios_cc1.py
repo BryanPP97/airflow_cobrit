@@ -14,6 +14,7 @@ import numpy as np
 import click
 import os
 import re
+import warnings
 warnings.filterwarnings('ignore')
 
 
@@ -23,7 +24,7 @@ def cc1_automation(cartera):
     load_dotenv(find_dotenv()) # Load the .env file.
     url = "https://app.ccc.uno/Campaign"
 
-    # Configuración para evitar notificaciones
+    # Set selenium options and url
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {
     "profile.default_content_setting_values.notifications": 1,
