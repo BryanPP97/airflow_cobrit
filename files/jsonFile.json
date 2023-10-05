@@ -24,8 +24,13 @@
     "words": ["IZZI"],
     "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
 
-    "TOTALPLAY":
+    "TOTAL PLAY":
     {"emails": ["mestevez@coperva.com", "jtorres@coperva.com"], 
-    "words": ["TOTALPLAY"],
+    "words": ["TOTALPLAY", "PLAY"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "PLATA CARD":
+    {"emails": ["cvarela@coperva.com", "acastaneda@coperva.com"],
+    "words": ["PLATA", "PLATACARD"],
     "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]}
 }
