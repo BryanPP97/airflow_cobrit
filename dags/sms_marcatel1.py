@@ -27,7 +27,8 @@ with DAG(
     default_args=default_args,
     description="Download data from Marcatel portal",
     start_date= datetime(year=2023, month=9, day=28, tzinfo=local_tz),
-    schedule_interval="0 23 * * 1-5",
+    #schedule_interval="0 23 * * 1-5",
+    schedule_interval="0 9-16 * * 1-5",
     tags = ['sms']
 ) as dag:
     scraper = PythonOperator(
