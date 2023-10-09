@@ -3,7 +3,7 @@ import shutil
 import yagmail
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
-from utils.utils_nlp1 import *
+from utils_nlp1 import *
 import pyodbc
 import json
 import warnings
@@ -182,3 +182,31 @@ def get_name(name, inverse=False):
         new_name.append(word)
         flag = 0
     return new_name
+
+def name_read():
+    """
+    Read and preprocess names from an Asignation file.
+
+    Reads a specific range of names from an Excel file, preprocesses the names by removing special characters,
+    and splits them into first names, paternal last names, maternal last names, and full names.
+
+    Returns:
+        DataFrame: A DataFrame containing the preprocessed names and their components.
+    """
+    
+    init = 190
+    final = 500
+    df = pd.read_excel('Z:/Data/HSBC/Asignaciones/ASG_TDC_IA_ENERO_JUNIO.xlsx')
+    df['Nombre'] = df.Nombre.apply(lambda X: X.replace('/', ' ').replace('*', '').rstrip())
+    df_filtered = df['Nombre']
+    df_filtered.drop_duplicates(inplace = True)
+    df_input = pd.DataFrame(df_filtered.reset_index(drop = True)).iloc[init:final]
+    
+    df_input['NombreSplit'] = df_input.Nombre.apply(lambda X: split_name(X))
+    df_input['Nombre'] = df_input.NombreSplit.apply(lambda X: X[0])
+    df_input['Paterno'] = df_input.NombreSplit.apply(lambda X: X[1])
+    df_input['Materno'] = df_input.NombreSplit.apply(lambda X: X[2])
+    
+    df_input['Nombre_Completo'] = df_input.apply(lambda row: ' '.join([row['Nombre'], row['Paterno'], row['Materno']]), axis = 1)
+    df_input.to_csv('df_input.csv')
+    return df_input

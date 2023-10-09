@@ -19,24 +19,7 @@ from utils_general import *
 
 def cedula_scraper():
     
-    init=193
-    final=500
-
-    df = pd.read_excel('Z:/Data/HSBC/Asignaciones/ASG_TDC_IA_ENERO_JUNIO.xlsx')
-    df['Nombre'] = df.Nombre.apply(lambda X: X.replace('/', ' ').replace('*', '').rstrip())
-    df_filtered = df['Nombre']
-    df_filtered.drop_duplicates(inplace=True)
-    df_input = pd.DataFrame(df_filtered.reset_index(drop=True)).iloc[init:final]
-
-
-
-    df_input['NombreSplit'] = df_input.Nombre.apply(lambda X: split_name(X))
-    df_input['Nombre'] = df_input.NombreSplit.apply(lambda X: X[0])
-    df_input['Paterno'] = df_input.NombreSplit.apply(lambda X: X[1])
-    df_input['Materno'] = df_input.NombreSplit.apply(lambda X: X[2])
-
-    # Concatenación
-    df_input['Nombre_Completo'] = df_input.apply(lambda row: ' '.join([row['Nombre'], row['Paterno'], row['Materno']]), axis = 1)
+    df_input = name_read()
     
     # Set selenium options and url
     url = 'https://cedulaprofesionalsep.online/#Consulta_de_Cedula_Profesional'
@@ -54,11 +37,8 @@ def cedula_scraper():
     driver.get(url)
     wait = WebDriverWait(driver, 20)
     
-    #iframe = wait.until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, 'body')))
-    #iframe.click()
     time.sleep(10)
-    #driver.switch_to.frame(iframe)
-    
+
     # Scraper
     data=[]
     #total_data_downloaded = 0
@@ -163,7 +143,9 @@ def cedula_scraper():
             
     driver.quit()            
     df_data = pd.DataFrame(data)
-    df_data.to_csv('Z:/Data/HSBC/SCRAPPING/Cédulas/0_.csv')
+    print(df_data)
+    
+    #df_data.to_csv('Z:/Data/HSBC/SCRAPPING/Cédulas/0_.csv')
     
     driver.quit()
     
