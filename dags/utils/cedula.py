@@ -86,14 +86,13 @@ def cedula_scraper():
             except:
 
                 time.sleep(1)  # Esperar 1 segundo antes de intentar nuevamente
-                
-                
-
 
         time.sleep(5)
         
         # Esperar a que los elementos estén visibles
         ver_botones = WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CLASS_NAME, 'ver-mas')))
+        html = driver.page_source
+        print(html)
 
         
         for ver in ver_botones:

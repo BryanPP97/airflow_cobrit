@@ -195,7 +195,7 @@ def name_read():
     """
     
     init = 190
-    final = 500
+    final = 200
     df = pd.read_excel('Z:/Data/HSBC/Asignaciones/ASG_TDC_IA_ENERO_JUNIO.xlsx')
     df['Nombre'] = df.Nombre.apply(lambda X: X.replace('/', ' ').replace('*', '').rstrip())
     df_filtered = df['Nombre']

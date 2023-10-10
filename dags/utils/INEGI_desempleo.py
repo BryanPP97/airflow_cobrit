@@ -55,6 +55,6 @@ def data_transformation():
     nuevo_df.reset_index(drop=True, inplace=True)
     nuevo_df.to_csv("/opt/airflow/outputs/INEGI/Tabulado.csv", index = False)
 
-    #data_transformation()
+    data_transformation()
     
-#INEGI_desempleo_scraper()
+INEGI_desempleo_scraper()
