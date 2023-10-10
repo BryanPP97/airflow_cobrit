@@ -3,7 +3,7 @@ import shutil
 import yagmail
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
-from utils_nlp1 import *
+from utils.utils_nlp1 import *
 import pyodbc
 import json
 import warnings
