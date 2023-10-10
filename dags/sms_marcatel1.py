@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import pendulum
 #import scrapers
 from utils.marcatel import marcatel_automation, process_sms
-from utils.utils_general import clean_folder
+from utils.utils_general import clean_folder, email
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
 
@@ -28,7 +28,7 @@ with DAG(
     description="Download data from Marcatel portal",
     start_date= datetime(year=2023, month=9, day=28, tzinfo=local_tz),
     #schedule_interval="0 23 * * 1-5",
-    schedule_interval="0 9-16 * * 1-5",
+    schedule_interval="0 9-18 * * 1-5",
     tags = ['sms']
 ) as dag:
     scraper = PythonOperator(
@@ -44,5 +44,10 @@ with DAG(
         python_callable=clean_folder,
         op_kwargs={'folder': '/opt/airflow/outputs/Marcatel/'}
     )
+    mailing = PythonOperator(
+        task_id='mailing',
+        python_callable=email,
+        op_kwargs={'portal': 'Marcatel'}
+    )
 
-    cleaner >> scraper >> processor
+    cleaner >> scraper >> processor >> mailing

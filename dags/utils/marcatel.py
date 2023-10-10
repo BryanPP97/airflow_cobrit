@@ -60,7 +60,7 @@ def marcatel_automation():
     exportar = driver.find_element(By.ID, "excel")
     driver.execute_script("arguments[0].scrollIntoView();", exportar)
     exportar.click()
-    time.sleep(10)
+    time.sleep(30)
     driver.quit()
 
 def process_sms():

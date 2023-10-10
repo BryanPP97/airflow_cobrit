@@ -104,7 +104,7 @@ def add_message(result, original):
 
 def email(portal):
     cpath = f'/opt/airflow/outputs/{portal}/'
-    mensaje = "Buen día\nLes comparto las cuentas que tienen prioridad para el día de hoy\n\nSaludos,\nAlberto Montán."
+    mensaje = "Buen día\nLes comparto las cuentas con respuesta positiva.\n\nSaludos,\nAlberto Montán."
     ## Read json File to get names
     with open('/opt/airflow/files/jsonFile.json') as f:
         maps = f.read()
@@ -125,7 +125,7 @@ def send_email(receivers, cc, body, filename, cartera):
     yag.send(
         to=receivers,
         cc=cc,
-        subject=f"Cuentas con priorirdad {cartera}",
+        subject=f"Respuestas SMS {cartera}",
         contents=body, 
         attachments=filename,
     )
