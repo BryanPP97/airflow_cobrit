@@ -1,16 +1,16 @@
 {
     "DIMEX": 
-    {"emails": ["cvarela@coperva.com", "sbalcazar@coperva.com"], 
+    {"emails": ["fmayen@coperva.com", "sbalcazar@coperva.com"], 
     "words": ["DIMEX", "DDIMEX"],
     "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]}, 
 
     "RAPPI": 
-    {"emails": ["fmayen@coperva.com", "eaguilar@coperva.com"], 
-    "words": ["RAPPI", "RRAPI"],
-    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]}, 
+    {"emails": ["fmayen@coperva.com", "eaguilar@coperva.com", "supervision_rappi@coperva.com"],
+    "words": ["RAPPI", "RRAPI", "RAPI"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
 
     "BANORTE": 
-    {"emails": ["fmayen@coperva.com", "coordinacion_banorte@coperva.com"], 
+    {"emails": ["mestevez@coperva.com", "abarron@coperva.com"], 
     "words": ["BANORTE"],
     "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
    
@@ -30,7 +30,37 @@
     "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
 
     "PLATA CARD":
-    {"emails": ["cvarela@coperva.com", "acastaneda@coperva.com"],
+    {"emails": ["mestevez@coperva.com", "acastaneda@coperva.com"],
     "words": ["PLATA", "PLATACARD"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "PALACIO DE HIERRO":
+    {"emails": ["fmayen@coperva.com", "coordinacion_palacio@coperva.com"],
+    "words": ["PALACIO"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "KONFIO":
+    {"emails": ["fmayen@coperva.com", "coordinacion_palacio@coperva.com"],
+    "words": ["KONFIO"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "SICREA":
+    {"emails": ["cvargas@coperva.com", "jbmejia@coperva.com"],
+    "words": ["SICREA"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "FONDEADORA":
+    {"emails": ["cvargas@coperva.com", "jbmejia@coperva.com"],
+    "words": ["FONDEADORA"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "CAPITAL INICIAL":
+    {"emails": ["cvargas@coperva.com", "acastaneda@coperva.com"],
+    "words": ["CAPITAL"],
+    "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]},
+
+    "TELCEL":
+    {"emails": ["abarron@coperva.com", "mestevez@coperva.com"],
+    "words": ["TELCEL"],
     "cc": ["ia_1@coperva.net", "ia_2@coperva.net", "ia_3@coperva.net"]}
 }
