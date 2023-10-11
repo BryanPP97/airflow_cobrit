@@ -33,6 +33,11 @@ with DAG(
     schedule_interval="@monthly",
     tags = ['scraper', 'data']
 ) as dag:
+    cleaner = PythonOperator(
+        task_id="cleaner",
+        python_callable=clean_folder,
+        op_kwargs={'folder': '/opt/airflow/outputs/INEGI/'}
+    )
     scraper = PythonOperator(
         task_id="scraper", 
         python_callable=INEGI_desempleo_scraper
@@ -42,4 +47,4 @@ with DAG(
         python_callable=data_transformation
     )
 
-    scraper >> transformer
+    cleaner >> scraper >> transformer
