@@ -7,12 +7,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import time
-from dotenv import load_dotenv, find_dotenv
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 import numpy as np
 from unidecode import unidecode
 import warnings
+import pyautogui
 warnings.filterwarnings('ignore')
 from utils_general import *
 
@@ -22,7 +22,7 @@ def cedula_scraper():
     df_input = name_read()
     
     # Set selenium options and url
-    url = 'https://cedulaprofesionalsep.online/#Consulta_de_Cedula_Profesional'
+    url = 'https://www.cedulaprofesional.sep.gob.mx/cedula/presidencia/indexAvanzada.action'
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {
     "profile.default_content_setting_values.notifications": 1,
@@ -55,22 +55,22 @@ def cedula_scraper():
         materno=row['Materno']
         
         # Ingresar nombres
-        celda_nombre = driver.find_element(By.XPATH, '//*[@id="input-nombre"]')
+        celda_nombre = driver.find_element(By.ID, 'nombre')
         celda_nombre.clear()
         celda_nombre.send_keys(str(nombre))
 
         #Ingresar Apellido Paterno
-        celda_paterno = driver.find_element(By.XPATH, '//*[@id="input-apaterno"]')
+        celda_paterno = driver.find_element(By.ID, 'paterno')
         celda_paterno.clear()
         celda_paterno.send_keys(str(paterno))
 
         # Ingresar Apellido Materno
-        celda_materno = driver.find_element(By.XPATH, '//*[@id="input-amaterno"]')
+        celda_materno = driver.find_element(By.ID, 'materno')
         celda_materno.clear()
         celda_materno.send_keys(str(materno))
 
         # Click en botón buscar
-        buscar = driver.find_element(By.XPATH, '//*[@id="container-form-1"]/form/div[4]/div/input')
+        buscar = driver.find_element(By.ID, 'dijit_form_Button_0_label')
         buscar.click()
         time.sleep(2)
 
