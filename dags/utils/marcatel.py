@@ -9,7 +9,7 @@ import os
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
-from utils.utils_general import get_positive
+from utils_general import get_positive
 import json
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import warnings
@@ -54,6 +54,14 @@ def marcatel_automation():
         # Espera unos segundos antes de cerrar el navegador
     time.sleep(10)
 
+    # fecha actual
+    date = date.timenow()
+    # Fecha de ayer
+    yesteday = date - timedelta(days=1)
+    # Format date
+    formatteed_date = yesteday.strftime("%Y-%m-%d")
+
+    date_marcatel = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'form-control-sm form-control valid'))).send_keys(formatteed_date)
     reporte = wait.until(EC.element_to_be_clickable((By.ID, "generarReporte")))
     reporte.click()
     time.sleep(30)

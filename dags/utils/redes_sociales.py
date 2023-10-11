@@ -32,6 +32,7 @@ def redes_sociales_scraper():
     driver = webdriver.Chrome(options = chrome_options)
     driver.get(url)
     wait = WebDriverWait(driver, 10)
+    time.sleep(10)
     search_input = wait.until(EC.presence_of_element_located((By.ID, 'searchbox_input')))
     search_input.send_keys(nombre)
     time.sleep(10)
@@ -47,9 +48,9 @@ def redes_sociales_scraper():
     for elemento_li in elementos_li:
         texto = elemento_li.text
         print(texto)
+        
     time.sleep(10)
-    #html = driver.page_source
-    #print(html)
+
     driver.quit()
     
 
