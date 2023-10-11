@@ -67,17 +67,18 @@ def gepard_automation():
 def process_sms():
     page = "Gepard"
     path = '/opt/airflow/outputs/Gepard/Resultados.csv'
-    
+
     ## Get last business day
     today = date.today()
     #today = datetime.datetime.now(ZoneInfo("America/Mexico_City"))
-    yesterday = ( today - pd.tseries.offsets.BDay(1) ).normalize()
-
+    yesterday = ( today - pd.tseries.offsets.BDay(0) ).normalize()
+    print("Today:", yesterday)
+    #df_today
     df = pd.read_csv(path)
     df.Fecha = pd.to_datetime( df.Fecha )
     df_sorted = df.sort_values('Fecha', ascending=False)
     df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
-    df_today = df_sorted.loc[df_sorted.normalised_date ==yesterday]
+    df_today = df_sorted.loc[df_sorted.normalised_date == yesterday]
     df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
     ## Read json File to get names
     with open('/opt/airflow/files/jsonFile.json') as f:
