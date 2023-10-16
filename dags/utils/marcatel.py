@@ -10,7 +10,7 @@ import os
 from datetime import datetime, timedelta, date
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
-from utils_general import get_positive
+from utils.utils_general import get_positive
 import json
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import warnings
@@ -77,11 +77,11 @@ def marcatel_automation():
 
             reporte = wait.until(EC.element_to_be_clickable((By.ID, "generarReporte")))
             reporte.click()
-            time.sleep(20)
+            time.sleep(30)
             exportar = driver.find_element(By.ID, "excel")
             driver.execute_script("arguments[0].scrollIntoView();", exportar)
             exportar.click()
-            time.sleep(30)
+            time.sleep(10)
             driver.quit()
             break
         except WebDriverException as e:
@@ -92,33 +92,30 @@ def marcatel_automation():
             continue
     if attempts == max_attempts:
         print(f"Se alcanzó el número máximo de intentos")
-        driver.quit()
-    #driver.quit()
+    driver.quit()
 
 def process_sms():
     page = "Marcatel"
     i_path = "/opt/airflow/outputs/Marcatel/"
     
     ## Get last business day
-    today = date.today()
-    yesterday = ( today - pd.tseries.offsets.BDay(0) ).normalize()
+    #today = date.today()
+    #yesterday = ( today - pd.tseries.offsets.BDay(1) ).normalize()
+    #yesterday = pd.to_datetime(today).normalize()
     ###
 
     for file in os.listdir(i_path):
         if file.endswith(".xlsx"):
             d_path = os.path.join(i_path, file)
             print(d_path)
-        else:
-            print("No data")
-            return 0
-    df = pd.read_excel(d_path, usecols=["Telefono", "MensajeRespuesta", "NombreEnvio", "FechaRespuesta"])
-    df.rename(columns={"NombreEnvio":"Proyecto", "FechaRespuesta":"Fecha"}, inplace=True) #
+    df = pd.read_excel(d_path, usecols=["Telefono", "MensajeRespuesta", "NombreEnvio"])#, "FechaRespuesta"])
+    df.rename(columns={"NombreEnvio":"Proyecto"}, inplace=True) #"FechaRespuesta":"Fecha"
 
-    df.Fecha = pd.to_datetime( df.Fecha, format="%d/%m/%Y %H:%M:%S" )
-    df_sorted = df.sort_values('Fecha', ascending=False)
-    df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
-    df_today = df_sorted.loc[df_sorted.normalised_date == yesterday]
-    df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
+    #df.Fecha = pd.to_datetime( df.Fecha )
+    #df_sorted = df.sort_values('Fecha', ascending=False)
+    #df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
+    #df_today = df_sorted.loc[df_sorted.normalised_date ==yesterday]
+    #df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
     ## Read json File to get names
     with open('/opt/airflow/files/jsonFile.json') as f:
         maps = f.read()
@@ -127,4 +124,4 @@ def process_sms():
     for key in parsed_json.keys():
         cartera = key
         words = parsed_json.get(key)['words']
-        get_positive(df_today, page, cartera, words) #df_today
+        get_positive(df, page, cartera, words) #df_today
