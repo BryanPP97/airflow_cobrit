@@ -17,82 +17,26 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-def gobernadores_scraper():
-    url = 'https://www.conago.org.mx/gobernadores'
-    
-
-   
-    # Configuración para evitar notificaciones
-    chrome_options = Options()
-    #options.add_argument("window-size=1200x600")
-    chrome_options.add_experimental_option("prefs", {
-    "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
-    "download.directory_upgrade": True,
-    "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
-    #"profile.default_content_settings.popups":0,
-    "download.default_directory":"/opt/airflow/outputs/Gobernadores/"})
-    # Configuración para ingresar al explorador
-
-    remote_webdriver = 'remote_chromedriver'
-    driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
-    driver.get(url)
-
-    # Localiza los elementos de interés
-    elementos = driver.find_elements(By.CLASS_NAME, 'col-xs-12.col-md-8.texto.rcGobernadores')
-
-
-    # Crear o abrir el archivo CSV
-    with open('datos_1.csv', 'w', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['Nombre', 'Fecha de Inicio', 'Fecha de Fin', 'Estado']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        
-        writer.writeheader()  # Escribir la fila de encabezados
-        
-        for _ in range(len(elementos)):
-            # Obtén el elemento específico y el estado
-            elemento = elementos[_]
-            estado_element = elemento.find_element(By.CLASS_NAME, 'textMedio')
-            estado = estado_element.text
-            estado_element.click()  # Hacer clic en el enlace
-            
-            # Obtener los elementos de interés en la página de detalle del estado
-            elementos_estado = driver.find_elements(By.CLASS_NAME, 'col-xs-12.col-sm-6.col-md-4.pb15')
-
-            for elemento_estado in elementos_estado:
-                nombre_gobernador = elemento_estado.find_element(By.TAG_NAME, 'h4').text
-                html = elemento_estado.get_attribute('innerHTML')
-                
-                # Usar expresión regular para encontrar las fechas
-                fechas = re.search(r'(\d{2}/\d{2}/\d{4}) a (\d{2}/\d{2}/\d{4})', html)
-                
-                if fechas:
-                    fecha_inicio = fechas.group(1)
-                    fecha_fin = fechas.group(2)
-                else:
-                    fecha_inicio = "Fecha no disponible"
-                    fecha_fin = "Fecha no disponible"
-                
-                # Imprimir para verificar
-                print(nombre_gobernador, fecha_inicio, fecha_fin)
-                
-                # Escribir los datos en el archivo CSV
-                writer.writerow({'Nombre': nombre_gobernador, 'Fecha de Inicio': fecha_inicio,
-                                'Fecha de Fin': fecha_fin, 'Estado': estado})
-
-            driver.back()  # Regresar a la página anterior
-
-        # Cerrar el navegador
-        driver.quit()
-gobernadores_scraper()
-
-
-
 def partidos_scraper():
     # Configura el controlador de Chrome
     driver = webdriver.Chrome()
 
     # Abre la página web de Wikipedia
     url = 'https://es.wikipedia.org/wiki/Wikipedia:Portada'
+    chrome_options = Options()
+    #chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_experimental_option("prefs", {
+    "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
+    "download.directory_upgrade": True,
+    "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
+    "profile.default_content_settings.popups":0,
+    "download.default_directory":"/opt/airflow/outputs/partidos_politicos/"
+    })
+    
+    # Configuración para ingresar al explorador
+    remote_webdriver = 'remote_chromedriver'
+    driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
     driver.get(url)
 
     # Leer los nombres de los gobernadores desde el archivo CSV
@@ -111,8 +55,6 @@ def partidos_scraper():
             
             nombres_gobernadores.append(nombre_completo)
 
-    # ... (código anterior) ...
-
     # Iterar sobre los nombres y buscar en la página web
     for nombre in nombres_gobernadores:
         buscar_gobernador = WebDriverWait(driver, 30).until(
@@ -125,7 +67,11 @@ def partidos_scraper():
         buscar_gobernador = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'cdx-text-input__input'))
         )
-        buscar_gobernador.submit()
+        time.sleep(5)
+        buscar_gobernador.send_keys(Keys.ENTER)
+        #button_search = WebDriverWait(driver, 10).until((EC.element_to_be_clickable((By.CLASS_NAME, 'cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button'))))
+        #button_search.click()
+        #buscar_gobernador.submit()
         buscar_gobernador = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'cdx-text-input__input'))
         )
@@ -173,4 +119,4 @@ def partidos_scraper():
 
     # Cerrar el navegador
     driver.quit()
-partidos_scraper()
+
