@@ -7,15 +7,32 @@ from unidecode import unidecode
 
 def gobernadores():
     df_gob = pd.read_csv("datos.csv")
+    nuevo_registro = pd.DataFrame({
+    "Nombre": ["Alfredo del Mazo Maza"],
+    "Fecha de Inicio": ["16/09/2017"],
+    "Fecha de Fin": ["15/09/2023"],
+    "Estado": ["mexico"]
+    })
+
+    df_gob = pd.concat([df_gob, nuevo_registro]).reset_index(drop=True)
+
     df_gob['Nombre'] = df_gob['Nombre'].str.replace(r'\w+\.', '', regex=True)
     df_gob['Nombre'] = df_gob['Nombre'].str.replace(r'\s', '', regex=True)
     df_gob['Estado'] = df_gob['Estado'].str.lower()
+    df_gob['Estado'] = df_gob['Estado'].apply(unidecode)
 
     return df_gob
 
 def pp_gob():
 
     df_pp = pd.read_csv("resultados_gobernadores.csv")
+    nuevo_registro = pd.DataFrame({
+        "Nombre" : ['Alfredo del Mazo Maza','Layda Elena Sansores San Román', 'Rutilio Cruz Escandón Cadenas','Esteban Alejandro Villegas Villarreal', 'Evelyn Cecia Salgado Pineda', 'Enrique Alfaro Ramírez', 'Sergio Salomón Céspedes Peregrina', 'María Elena Lezama Espinosa', 'José Ricardo Gallardo Cardona', 'Francisco Alfonso Durazo Montaño'],
+        "Partido político": ["Partido Revolucionario Institucional", 'Movimiento Regeneración Nacional','Movimiento Regeneración Nacional', "Partido Revolucionario Institucional", 'Movimiento Regeneración Nacional', 'Movimiento Ciudadano', 'Movimiento Regeneración Nacional', 'Movimiento Regeneración Nacional', 'Partido Verde Ecologista de México', 'Movimiento Regeneración Nacional'],
+        "Año de inicio": ['No disponible', 'No disponible','No disponible', 'No disponible', 'No disponible', 'No disponible', 'No disponible', 'No disponible', 'No disponible', 'No disponible'],
+    })
+
+    df_pp = pd.concat([df_pp, nuevo_registro]).reset_index(drop=True)
     df_pp['Nombre'] = df_pp['Nombre'].str.replace(r'\s', '', regex=True)
 
     def split_parties(row):
@@ -104,7 +121,6 @@ def clima_dp_shf(df_shf):
     df_clima['Trimestre'] = df_clima['name'].map(meses_a_trimestres)
     df_clima['Trimestre'] = '2023-' + df_clima['Trimestre']
 
-    df_clima
     # Fusionar DataFrames en función del Estado y el Trimestre
     df_dp_clima = df_clima.merge(df_desemp, on=['Estado', 'Trimestre'])
     # Quitar espacios y acentos para df_dp_clima
@@ -121,35 +137,19 @@ def pp(df_gob_pp):
     df_gob_pp['Fecha de Inicio'] = pd.to_datetime(df_gob_pp['Fecha de Inicio'], dayfirst=True)
     df_gob_pp['Fecha de Fin'] = pd.to_datetime(df_gob_pp['Fecha de Fin'], dayfirst=True)
 
-    def mes_a_trimestre(mes):
-        if mes <= 3:
-            return 'I'
-        elif mes <= 6:
-            return 'II'
-        elif mes <= 9:
-            return 'III'
-        else:
-            return 'IV'
-
-    df_gob_pp['Trimestre'] = df_gob_pp['Fecha de Inicio'].dt.month.apply(mes_a_trimestre)
-    df_gob_pp['Año'] = df_gob_pp['Fecha de Inicio'].dt.year.astype(str)
-    df_gob_pp['Trimestre'] = df_gob_pp['Año'] + '-' + df_gob_pp['Trimestre']
-    df_gob_pp.drop('Año', axis=1, inplace=True)
-    
-
     meses_a_trimestres_english = {
-        'January': 'I',
-        'February': 'I',
-        'March': 'I',
-        'April': 'II',
-        'May': 'II',
-        'June': 'II',
-        'July': 'III',
-        'August': 'III',
-        'September': 'III',
-        'October': 'IV',
-        'November': 'IV',
-        'December': 'IV'
+    'January': 'I',
+    'February': 'I',
+    'March': 'I',
+    'April': 'II',
+    'May': 'II',
+    'June': 'II',
+    'July': 'III',
+    'August': 'III',
+    'September': 'III',
+    'October': 'IV',
+    'November': 'IV',
+    'December': 'IV'
     }
 
     def obtener_trimestres(inicio, fin):
@@ -194,5 +194,5 @@ if __name__ == "__main__":
     df_gob_pp = pp()
 
     df_final = df_shf_all.merge(df_gob_pp[['Estado', 'Trimestre', 'Partido']], on=['Estado', 'Trimestre'], how='left')
-
+    df_final.to_csv('variables_externas.csv')
     
