@@ -3,7 +3,7 @@ import shutil
 import yagmail
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
-from utils_nlp1 import *
+from utils.utils_nlp1 import *
 import pyodbc
 import json
 import warnings
@@ -36,7 +36,7 @@ def run_query(query, cnxn_str=None):
                     "Server=majestic.jezapps.com;"
                     "DATABASE=coperva_ia;"
                     "UID=iateam;"
-                    "PWD=Coperva2023$$;"
+                    "PWD=Coperva2024$$;"
                     "Trusted_Connection=no;"
                     "TrustServerCertificate=yes"
                     )
