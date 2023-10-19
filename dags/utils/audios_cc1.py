@@ -17,9 +17,9 @@ import re
 import warnings
 warnings.filterwarnings('ignore')
 
-
-@click.command()
-@click.option('--cartera', prompt='Ingresa el número de la cartera', help='La cartera a obtener Audios')
+## 1752 IZZI
+#@click.command()
+#@click.option('--cartera', prompt='Ingresa el número de la cartera', help='La cartera a obtener Audios')
 def cc1_automation(cartera):
     load_dotenv(find_dotenv()) # Load the .env file.
     url = "https://app.ccc.uno/Campaign"
@@ -32,10 +32,13 @@ def cc1_automation(cartera):
     "download.directory_upgrade": True,
     "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
     "plugins.always_open_pdf_externally": True,
-    "download.default_directory":"/opt/airflow/outputs/CC1/"
+    "download.default_directory":"/opt/airflow/audios"
     })
     # Configuración para ingresar al explorador
-    driver = webdriver.Chrome(options = chrome_options)
+    #driver = webdriver.Chrome(options = chrome_options)
+    remote_webdriver = 'remote_chromedriver'
+    driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
+    
     driver.get(url)
     wait = WebDriverWait(driver, 10)
 
@@ -115,7 +118,7 @@ def cc1_automation(cartera):
         # Imprimir el DataFrame
         print(df_pandas)
         # Directorio donde deseas guardar el archivo CSV
-        save_directory = r'C:\Users\DSTHREE\Downloads'
+        save_directory = "/opt/airflow/audios"
 
         # Nombre del archivo CSV (puedes cambiarlo según tus preferencias)
         csv_filename = 'datos_extraidos.csv'
@@ -186,7 +189,7 @@ def cc1_automation(cartera):
                     # Mueve el archivo a la ubicación deseada y renómbralo
                     os.rename(current_filepath, new_filepath)
     #Renombra el archivo de descarga
-    rename_downloaded_file(".wav")
+    #rename_downloaded_file(".wav")
 
-if __name__ == '__main__':
-    cc1_automation()
+#if __name__ == '__main__':
+#    cc1_automation()
