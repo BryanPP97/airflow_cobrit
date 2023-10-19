@@ -25,7 +25,7 @@ def gepard_automation():
     url = "https://www.message-center.com.mx/"
     # Configuración para evitar notificaciones
     chrome_options = Options()
-    #chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--headless')
     #chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_experimental_option("prefs", {
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
@@ -61,7 +61,7 @@ def gepard_automation():
         # Exportar Excel
     export = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'img[title="Exportar a Excel..."]')))
     export.click()
-    time.sleep(10)
+    time.sleep(15)
     driver.quit()
 
 def process_sms():
