@@ -80,6 +80,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/outputs:/opt/airflow/outputs
     - ${AIRFLOW_PROJ_DIR:-.}/dags/utils:/opt/airflow/dags/utils
     - ${AIRFLOW_PROJ_DIR:-.}/files:/opt/airflow/files
+    - ${AIRFLOW_PROJ_DIR:-.}/audios:/opt/airflow/audios 
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
