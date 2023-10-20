@@ -1,12 +1,21 @@
 import pandas as pd
 import re
 from unidecode import unidecode
+import pyodbc
 
 
+
+def normalize_string(s):
+    return unidecode(s.strip().lower())
+
+def process_dataframe(df, columns):
+    for col in columns:
+        df[col] = df[col].apply(normalize_string)
+    return df
 
 
 def gobernadores():
-    df_gob = pd.read_csv("datos.csv")
+    df_gob = pd.read_csv("C:/Users/DSTHREE/Documents/GITHUB/airflow/dags/utils/datos.csv")
     nuevo_registro = pd.DataFrame({
     "Nombre": ["Alfredo del Mazo Maza"],
     "Fecha de Inicio": ["16/09/2017"],
@@ -25,7 +34,7 @@ def gobernadores():
 
 def pp_gob():
 
-    df_pp = pd.read_csv("resultados_gobernadores.csv")
+    df_pp = pd.read_csv("C:/Users/DSTHREE/Documents/GITHUB/airflow/dags/utils/resultados_gobernadores.csv")
     nuevo_registro = pd.DataFrame({
         "Nombre" : ['Alfredo del Mazo Maza','Layda Elena Sansores San Román', 'Rutilio Cruz Escandón Cadenas','Esteban Alejandro Villegas Villarreal', 'Evelyn Cecia Salgado Pineda', 'Enrique Alfaro Ramírez', 'Sergio Salomón Céspedes Peregrina', 'María Elena Lezama Espinosa', 'José Ricardo Gallardo Cardona', 'Francisco Alfonso Durazo Montaño'],
         "Partido político": ["Partido Revolucionario Institucional", 'Movimiento Regeneración Nacional','Movimiento Regeneración Nacional', "Partido Revolucionario Institucional", 'Movimiento Regeneración Nacional', 'Movimiento Ciudadano', 'Movimiento Regeneración Nacional', 'Movimiento Regeneración Nacional', 'Partido Verde Ecologista de México', 'Movimiento Regeneración Nacional'],
@@ -60,7 +69,7 @@ def pp_gob():
     return df_pp
 
 def shf():
-    df_shf = pd.read_csv('SHF_extract.csv')
+    df_shf = pd.read_csv('C:/Users/DSTHREE/Documents/GITHUB/airflow/dags/utils/SHF_extract.csv')
     df_shf = df_shf.drop(df_shf.index[33:])
     df_shf = df_shf.melt(id_vars=['Estado'], var_name = 'Trimestre', value_name='SHF')
     # Usar str.contains para filtrar los registros que contienen "2023"
@@ -72,7 +81,7 @@ def shf():
 
 def desempleo():
     
-    df_desemp = pd.read_csv('Tabulado.csv')
+    df_desemp = pd.read_csv('C:/Users/DSTHREE/Documents/GITHUB/airflow/dags/utils/Tabulado.csv')
     df_desemp = df_desemp.melt(id_vars=['Estado'], var_name='Trimestre', value_name='DP')
 
     renombre = {
@@ -89,7 +98,7 @@ def desempleo():
 
 
 def clima_dp_shf(df_shf):
-    df_clima = pd.read_csv('datos_climaticos.csv')
+    df_clima = pd.read_csv('C:/Users/DSTHREE/Documents/GITHUB/airflow/dags/utils/datos_climaticos.csv')
     df_clima['Estado'] = df_clima['Estado'].str.replace(r'^estado de ', '', regex=True)
     renombre = {
         'coahuila de zaragoza' : 'coahuila',
@@ -179,20 +188,68 @@ def pp(df_gob_pp):
 
 
 
+def save_to_sql(df, table_name, cnxn_str=None, if_exists='replace', index=False):
+    """
+    df: DataFrame to be saved
+    table_name: String name of the table in the database
+    cnxn_str: Connection string to the server
+    if_exists: {'fail', 'replace', 'append'}, default 'replace'
+        - fail: If table exists, do nothing.
+        - replace: If table exists, drop it, recreate it, and insert data.
+        - append: If table exists, insert data. Create if does not exist.
+    index: bool, default False
+        Write DataFrame index as a column.
 
+    This function saves a DataFrame to a SQL Server database.
+    """
+
+    if cnxn_str is None:
+        # Default connection to majestic server
+        cnxn_str = ("Driver={ODBC Driver 18 for SQL Server};"
+                    "Server=majestic.jezapps.com;"
+                    "DATABASE=coperva_ia;"
+                    "UID=iateam;"
+                    "PWD=Coperva2024$$;"
+                    "Trusted_Connection=no;"
+                    "TrustServerCertificate=yes"
+                    )
+
+    # Create a connection
+    cnxn = pyodbc.connect(cnxn_str)
+
+    # Save the DataFrame to SQL
+    df.to_sql(table_name, cnxn, if_exists=if_exists, index=index)
+
+    # Close the connection
+    cnxn.close()
+
+
+
+# Use the function
 if __name__ == "__main__":
-
-    df_gob = gobernadores()
-    df_pp = pp_gob()
-    df_sfh = shf()
-    df_desemp = desempleo()
-
-    df_gob_pp = pd.merge(df_pp, df_gob, on='Nombre')
     
+    # Gobernadores
+    df_gob = gobernadores()
+    df_gob = process_dataframe(df_gob, ['Nombre', 'Estado'])
 
+    # Partidos Políticos
+    df_pp = pp_gob()
+    df_pp = process_dataframe(df_pp, ['Nombre'])
+    
+    # SHF
+    df_sfh = shf()
+    df_sfh = process_dataframe(df_sfh, ['Estado'])
+    
+    # Desempleo
+    df_desemp = desempleo()
+    df_desemp = process_dataframe(df_desemp, ['Estado'])
+    
+    # Unificar datos
+    df_gob_pp = pd.merge(df_pp, df_gob, on='Nombre')
     df_shf_all = clima_dp_shf(df_sfh)
     df_gob_pp = pp()
-
     df_final = df_shf_all.merge(df_gob_pp[['Estado', 'Trimestre', 'Partido']], on=['Estado', 'Trimestre'], how='left')
-    df_final.to_csv('variables_externas.csv')
     
+    # Guardar resultados
+    df_final.to_csv('variables_externas.csv')
+    save_to_sql(df_gob, 'df_final')
