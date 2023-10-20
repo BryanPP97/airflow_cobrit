@@ -39,7 +39,7 @@ with DAG(
     "clima_scraper",
     default_args=default_args,
     description="Download clima data",
-    start_date= datetime(year=2023, month=10, day=19, tzinfo=local_tz),
+    start_date= datetime(year=2023, month=10, day=1, tzinfo=local_tz),
     #schedule_interval="0 9 * * 1-5",
     schedule_interval="@monthly",
     tags = ['clima', 'data', 'scraper']
