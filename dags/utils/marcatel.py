@@ -81,7 +81,7 @@ def marcatel_automation():
             exportar = driver.find_element(By.ID, "excel")
             driver.execute_script("arguments[0].scrollIntoView();", exportar)
             exportar.click()
-            time.sleep(10)
+            time.sleep(30)
             driver.quit()
             break
         except WebDriverException as e:
@@ -92,7 +92,7 @@ def marcatel_automation():
             continue
     if attempts == max_attempts:
         print(f"Se alcanzó el número máximo de intentos")
-    driver.quit()
+    #driver.quit() 
 
 def process_sms():
     page = "Marcatel"
