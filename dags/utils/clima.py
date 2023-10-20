@@ -28,9 +28,9 @@ def obtener_nombre_estado(url):
         estado = parts[2].replace("-", " ")
         # Tratar la excepción de "distrito-federal"
         if "estado-de" in estado:
-            estado = estado.replace("estado-de-", "")
-        elif "distrito-federal" in estado:
-            estado = "Ciudad de México"
+            estado = estado.replace("estado de ", "")
+        elif "distrito federal" in estado:
+            estado = "ciudad de mexico"
         return estado
     return None
 
@@ -130,7 +130,7 @@ def clima_scraper():
                 datos_climaticos.extend(months_data)
 
                 # Crear un archivo CSV y escribir los datos
-                with open('datos_climaticos.csv', mode='w', newline='') as file:
+                with open('/opt/airflow/outputs/clima/datos_climaticos.csv', mode='w', newline='') as file:
                     fieldnames = list(months_data[0].keys())  # Obtener los nombres de las columnas
                     #fieldnames.append('Estado')  # Agregar la nueva columna 'Estado'
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
