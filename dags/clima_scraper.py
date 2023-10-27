@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 import pendulum
+import pandas as pd
+from sqlalchemy import create_engine
 from utils.utils_general import clean_folder
+from airflow.hooks.S3_hook import S3Hook
 
 #import scrapers
 from utils.clima import clima_scraper
@@ -19,19 +22,11 @@ default_args={
     "email_on_retry": False,
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
-    # 'queue': 'bash_queue',
-    # 'pool': 'backfill',
-    # 'priority_weight': 10,
-    # 'end_date': datetime(2016, 1, 1),
-    # 'wait_for_downstream': False,
-    # 'sla': timedelta(hours=2),
-    # 'execution_timeout': timedelta(seconds=300),
-    # 'on_failure_callback': some_function, # or list of functions
-    # 'on_success_callback': some_other_function, # or list of functions
-    # 'on_retry_callback': another_function, # or list of functions
-    # 'sla_miss_callback': yet_another_function, # or list of functions
-    # 'trigger_rule': 'all_success'
 }
+
+def upload_to_s3(filename: str, key: str, bucket_name: str) -> None:
+    hook = S3Hook('S3-Connection')
+    hook.load_file(filename=filename, key=key, bucket_name=bucket_name, replace=True)
 
 ## Create DAG
 local_tz = pendulum.timezone("America/Mexico_City")
@@ -53,5 +48,13 @@ with DAG(
         task_id="download", 
         python_callable=clima_scraper
     )
-
-    cleaner >> download
+    upload_to_s3 = PythonOperator(
+        task_id='upload_to_s3',
+        python_callable=upload_to_s3,
+        op_kwargs={
+            'filename': '/opt/airflow/outputs/clima/datos_climaticos.csv',
+            'key': 'datos_climaticos.csv',
+            'bucket_name': 'datos-scrapers'
+        }
+    )
+    cleaner >> download >> upload_to_s3 
