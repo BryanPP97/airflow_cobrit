@@ -34,7 +34,6 @@ def obtener_nombre_estado(url):
         return estado
     return None
 
-
 def clima_scraper():
     max_attempts = 4
     attempts = 0
@@ -136,6 +135,8 @@ def clima_scraper():
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
                     writer.writeheader()
                     writer.writerows(datos_climaticos)
+
+            driver.quit()
             break
         except WebDriverException as e:
             print(f"Se produjo una excepción: {e}")
