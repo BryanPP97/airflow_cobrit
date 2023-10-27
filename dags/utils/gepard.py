@@ -25,7 +25,7 @@ def gepard_automation():
     url = "https://www.message-center.com.mx/"
     # Configuración para evitar notificaciones
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--headless')
     #chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_experimental_option("prefs", {
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
@@ -76,7 +76,7 @@ def process_sms():
     #df_today
     df = pd.read_csv(path)
     df.Fecha = pd.to_datetime( df.Fecha )
-    df_sorted = df.sort_values('Fecha', ascending=False)
+    df_sorted = df.sort_values('Fecha', ascending=True)  ## Was False
     df_sorted['normalised_date'] = df_sorted['Fecha'].dt.normalize()
     df_today = df_sorted.loc[df_sorted.normalised_date == yesterday]
     df_today.drop(columns=['normalised_date', 'Fecha'], inplace=True)
