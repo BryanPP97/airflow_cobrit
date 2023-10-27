@@ -65,11 +65,22 @@ def get_positive(df, portal, cartera, words):
     
     df_2 = df_0.loc[df_0[cartera] > 0]
     df_2.rename(columns={'Mensaje': 'MensajeRespuesta'}, inplace=True)
+    #### Concatenar mensaje 
+    df_2 = juntar_mensaje(df_2)
+    ####
+    ## Se aplica primer filtro
+    if df_2.shape[0] == 0:
+        return 0
+    df_2['ofensivo'] = df_2.MensajeRespuesta.apply(lambda X: filtrar_palabras_ofensivas(X))
+    df_2 = df_2.loc[df_2.ofensivo=='positivo']
+    df_2.drop(columns='ofensivo', inplace=True)
+    df_2.reset_index(drop=True, inplace=True)
+    ##
     dff=genera_token(df_2, 'MensajeRespuesta')
     dft=dff.merge(df_1, how='left', on='token')
     dft=dft.fillna(0)
-    d=dft.groupby(by=['Telefono','MensajeRespuesta' , 'Proyecto']).sum()
-    posi=pd.DataFrame(d[(d['positivo']>0) & (d['enojo']==0)&(d['positivo']>d['negativo'])])
+    d=dft.groupby(by=['Telefono','MensajeRespuesta']).sum()
+    posi=pd.DataFrame(d[(d['positivo']>0) & (d['enojo']==0) & (d['positivo']>d['negativo'])])
     if posi.shape[0] > 0:
         telefonos = posi.reset_index().Telefono.unique()
         phones = "("
@@ -87,6 +98,34 @@ def get_positive(df, portal, cartera, words):
             final = add_message(result, df_2)
             final.CUENTA = final.CUENTA.astype(str)
             final.to_excel(f"{save_paht}{cartera}.xlsx", index=False)
+
+def juntar_mensaje(df):
+    dta = list()
+    df.drop_duplicates(inplace=True)
+    for telefono in df.Telefono.unique():
+        dat_i = {}
+        dat_i['Telefono'] = telefono
+        temp = df.loc[df.Telefono==telefono]
+        mensaje = temp.MensajeRespuesta.values
+        m_final = " ".join(mensaje)
+        dat_i['MensajeRespuesta'] = m_final
+        dta.append(dat_i)
+        
+    df_o = pd.DataFrame(dta)
+    return df_o
+
+
+def filtrar_palabras_ofensivas(texto):
+    palabras_ofensivas = ['puto', 'pendejo', 'pendeja', 'puta', 'chinga', 'chinga tu madre', 'hijo de', 'tarado', 
+                      'imbecil', 'bobo', 'boba', 'chingar', 'joder', 'verga', 'chupenmela', 'no soy', 'pendejos']
+    palabras_texto = texto.lower().split()
+    palabras_ofensivas_encontradas = [palabra for palabra in palabras_texto if palabra in palabras_ofensivas]
+    if len(palabras_ofensivas_encontradas) > 0:
+        c='Negativo'
+    else:
+        c='positivo'
+    return c
+           
 
 def add_message(result, original):
     df_1 = result.copy()
