@@ -57,6 +57,6 @@ def ift_automation():
         # Abre el archivo ZIP en modo de lectura
         with zipfile.ZipFile(os.path.join("/opt/airflow/outputs/ift/", archivo_zip), 'r') as zf:
             # Extrae todos los archivos y carpetas dentro del archivo ZIP en la carpeta de destino
-            zf.extractall("/opt/airflow/outputs/ift/")
+            zf.extractall("/opt/airflow/outputs/ift")
 
     driver.quit()

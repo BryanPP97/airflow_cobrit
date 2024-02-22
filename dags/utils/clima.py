@@ -86,7 +86,7 @@ def clima_scraper():
             "download.directory_upgrade": True,
             "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
             "profile.default_content_settings.popups":0,
-            "download.default_directory":"/opt/airflow/outputs/clima/"
+            "download.default_directory":"/opt/airflow/outputs/clima"
             })
             
             # Configuración para ingresar al explorador
