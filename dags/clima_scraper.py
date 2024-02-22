@@ -17,11 +17,11 @@ from airflow.operators.python_operator import PythonOperator
 default_args={
     'owner': 'cobrit',
     "depends_on_past": False,
-    "email": ["jmontan@coperva.com"],
-    "email_on_failure": True,
-    "email_on_retry": False,
-    "retries": 1,
-    "retry_delay": timedelta(minutes=1),
+    #"email": ["jmontan@coperva.com"],
+    #"email_on_failure": True,
+    #"email_on_retry": False,
+    #"retries": 1,
+    #"retry_delay": timedelta(minutes=1),
 }
 
 def upload_to_s3(filename: str, key: str, bucket_name: str) -> None:
@@ -34,7 +34,7 @@ with DAG(
     "clima_scraper",
     default_args=default_args,
     description="Download clima data",
-    start_date= datetime(year=2023, month=10, day=1, tzinfo=local_tz),
+    start_date= datetime(year=2024, month=2, day=22, tzinfo=local_tz),
     #schedule_interval="0 9 * * 1-5",
     schedule_interval="@monthly",
     tags = ['clima', 'data', 'scraper']
@@ -54,7 +54,7 @@ with DAG(
         op_kwargs={
             'filename': '/opt/airflow/outputs/clima/datos_climaticos.csv',
             'key': 'datos_climaticos.csv',
-            'bucket_name': 'datos-scrapers'
+            'bucket_name': 'emi-data'
         }
     )
     cleaner >> download >> upload_to_s3 
