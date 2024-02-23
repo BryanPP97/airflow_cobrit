@@ -136,7 +136,7 @@ def clima_scraper():
                     writer.writeheader()
                     writer.writerows(datos_climaticos)
 
-            driver.quit()
+
             break
         except WebDriverException as e:
             print(f"Se produjo una excepción: {e}")
