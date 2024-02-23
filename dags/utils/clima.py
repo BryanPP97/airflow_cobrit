@@ -28,8 +28,8 @@ def obtener_nombre_estado(url):
         estado = parts[2].replace("-", " ")
         # Tratar la excepción de "distrito-federal"
         if "estado-de" in estado:
-            estado = estado.replace("estado de ", "")
-        elif "distrito federal" in estado:
+            estado = estado.replace("estado-de-", "")
+        elif "distrito-federal" in estado:
             estado = "ciudad de mexico"
         return estado
     return None
@@ -79,8 +79,8 @@ def clima_scraper():
         
             
             chrome_options = Options()
-            #chrome_options.add_argument('--headless')
-            #chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_experimental_option("prefs", {
             "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
             "download.directory_upgrade": True,
@@ -97,7 +97,7 @@ def clima_scraper():
 
             for url in urls:
                 driver.get(url)
-                wait = WebDriverWait(driver, 10)
+                wait = WebDriverWait(driver, 60)
 
                 container= wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "table")))
                 container.location_once_scrolled_into_view
