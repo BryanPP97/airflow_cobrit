@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 import pendulum
 import pandas as pd
 from sqlalchemy import create_engine
-from utils.utils_general import clean_folder
-from airflow.hooks.S3_hook import S3Hook
+from utils.utils_general import clean_folder, upload_to_s3
+
 
 #import scrapers
 from utils.clima import clima_scraper
@@ -24,9 +24,7 @@ default_args={
     #"retry_delay": timedelta(minutes=1),
 }
 
-def upload_to_s3(filename: str, key: str, bucket_name: str) -> None:
-    hook = S3Hook('S3-Connection')
-    hook.load_file(filename=filename, key=key, bucket_name=bucket_name, replace=True)
+
 
 ## Create DAG
 local_tz = pendulum.timezone("America/Mexico_City")
@@ -34,7 +32,7 @@ with DAG(
     "clima_scraper",
     default_args=default_args,
     description="Download clima data",
-    start_date= datetime(year=2024, month=2, day=22, tzinfo=local_tz),
+    start_date= datetime(year=2024, month=2, day=23, tzinfo=local_tz),
     #schedule_interval="0 9 * * 1-5",
     schedule_interval="@monthly",
     tags = ['clima', 'data', 'scraper']

@@ -6,7 +6,7 @@ from airflow import DAG
 
 #import scrapers
 from utils.INEGI_desempleo import INEGI_desempleo_scraper, data_transformation
-from utils.utils_general import clean_folder
+from utils.utils_general import clean_folder, upload_to_s3
 
 # Python operator to run scripts
 from airflow.operators.python_operator import PythonOperator
@@ -36,7 +36,7 @@ with DAG(
     cleaner = PythonOperator(
         task_id="cleaner",
         python_callable=clean_folder,
-        op_kwargs={'folder': '/opt/airflow/outputs/INEGI/'}
+        op_kwargs={'folder': '/opt/airflow/outputs/'}
     )
     scraper = PythonOperator(
         task_id="scraper", 
@@ -46,5 +46,13 @@ with DAG(
         task_id="transformer",
         python_callable=data_transformation
     )
-
-    cleaner >> scraper >> transformer
+    upload_to_s3 = PythonOperator(
+        task_id='upload_to_s3',
+        python_callable=upload_to_s3,
+        op_kwargs={
+            'filename': '/opt/airflow/outputs/Tabulado.csv',
+            'key': 'Tabulado.csv',
+            'bucket_name': 'emi-data'
+        }
+    )
+    cleaner >> scraper >> transformer >> upload_to_s3

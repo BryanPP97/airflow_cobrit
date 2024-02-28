@@ -3,7 +3,7 @@ import pendulum
 
 #import scrapers
 from utils.IFT import ift_automation
-from utils.utils_general import clean_folder
+from utils.utils_general import clean_folder, upload_to_s3
 from airflow import DAG
 
 # Python operator to run scripts
@@ -36,7 +36,16 @@ with DAG(
     cleaner = PythonOperator(
         task_id="cleaner",
         python_callable=clean_folder,
-        op_kwargs={'folder': '/opt/airflow/outputs/ift/'}
+        op_kwargs={'folder': '/opt/airflow/outputs/'}
+    )
+    upload_to_s3 = PythonOperator(
+        task_id='upload_to_s3',
+        python_callable=upload_to_s3,
+        op_kwargs={
+            'filename': '/opt/airflow/outputs/ift.csv',
+            'key': 'ift.csv',
+            'bucket_name': 'emi-data'
+        }
     )
 
-    cleaner >> scraper
+    cleaner >> scraper >> upload_to_s3

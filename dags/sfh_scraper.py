@@ -3,7 +3,7 @@ import pendulum
 
 #import scrapers
 from utils.SHF import ift_scraper, pdf_convert, extractor_tablas
-from utils.utils_general import clean_folder
+from utils.utils_general import clean_folder, upload_to_s3
 from airflow import DAG
 
 # Python operator to run scripts
@@ -46,5 +46,14 @@ with DAG(
         task_id="table_maker",
         python_callable=extractor_tablas
     )
+    upload_to_s3 = PythonOperator(
+        task_id='upload_to_s3',
+        python_callable=upload_to_s3,
+        op_kwargs={
+            'filename': '/opt/airflow/outputs/shf/SHF_extract.csv',
+            'key': 'datos_climaticos.csv',
+            'bucket_name': 'emi-data'
+        }
+    )
 
-    cleaner >> scraper >> converter >> t_maker
+    cleaner >> scraper >> converter >> t_maker >> upload_to_s3

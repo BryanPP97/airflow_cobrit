@@ -42,6 +42,7 @@ def clima_scraper():
         datos_climaticos = []
         try:
 
+
             urls =  [
             "https://www.clima.com/mexico/estado-de-aguascalientes/aguascalientes",
             "https://www.clima.com/mexico/estado-de-baja-california/mexicali",
@@ -76,74 +77,70 @@ def clima_scraper():
             "https://www.clima.com/mexico/estado-de-yucatan/merida",
             "https://www.clima.com/mexico/estado-de-zacatecas/zacatecas"
         ]
-        
+
             
             chrome_options = Options()
-            chrome_options.add_argument('--headless')
-            chrome_options.add_argument('--disable-dev-shm-usage')
+            #chrome_options.add_argument('--headless')
+            #chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_experimental_option("prefs", {
             "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
             "download.directory_upgrade": True,
             "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
             "profile.default_content_settings.popups":0,
-            "download.default_directory":"/opt/airflow/outputs/clima/"
+            "download.default_directory":"/opt/airflow/outputs/clima"
             })
-            
-            # Configuración para ingresar al explorador
             remote_webdriver = 'remote_chromedriver'
             driver = webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options)
-
-
-
             for url in urls:
-                driver.get(url)
-                wait = WebDriverWait(driver, 60)
+                    driver.get(url)
+                    wait = WebDriverWait(driver,60)
 
-                container= wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "table")))
-                container.location_once_scrolled_into_view
+                    container= wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "table")))
+                    container.location_once_scrolled_into_view
 
-                desplazamiento_vertical = 400  # Cambia esto a la cantidad de píxeles que desees desplazarte
+                    desplazamiento_vertical = 400  # Cambia esto a la cantidad de píxeles que desees desplazarte
 
-                # Realiza el desplazamiento
-                driver.execute_script(f"window.scrollBy(0, {desplazamiento_vertical});")
+                    # Realiza el desplazamiento
+                    driver.execute_script(f"window.scrollBy(0, {desplazamiento_vertical});")
 
-                time.sleep(10)
+                    time.sleep(10)
 
-                #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                page_soruce = driver.page_source
-                soup = BeautifulSoup(page_soruce, "html.parser")
-                # Encontrar el elemento <canvas>
-                canvas = soup.find('canvas', class_='chart gtm-climateAverage-chart')
+                    #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    page_soruce = driver.page_source
+                    soup = BeautifulSoup(page_soruce, "html.parser")
+                    # Encontrar el elemento <canvas>
+                    canvas = soup.find('canvas', class_='chart gtm-climateAverage-chart')
 
-                # Obtener el valor del atributo 'data-months'
-                data_months = canvas['data-months']
+                    # Obtener el valor del atributo 'data-months'
+                    data_months = canvas['data-months']
 
-                
-                months_data = json.loads(data_months)
-                # Obtener el nombre del estado
-                nombre_estado = obtener_nombre_estado(url)
+                    
+                    months_data = json.loads(data_months)
+                    # Obtener el nombre del estado
+                    nombre_estado = obtener_nombre_estado(url)
 
-                for mes in months_data:
-                    mes['Estado'] = nombre_estado # Agregar la nueva columna con el nombre del estado
+                    for mes in months_data:
+                        mes['Estado'] = nombre_estado # Agregar la nueva columna con el nombre del estado
 
-                datos_climaticos.extend(months_data)
+                    datos_climaticos.extend(months_data)
 
-                # Crear un archivo CSV y escribir los datos
-                with open('/opt/airflow/outputs/clima/datos_climaticos.csv', mode='w', newline='') as file:
-                    fieldnames = list(months_data[0].keys())  # Obtener los nombres de las columnas
-                    #fieldnames.append('Estado')  # Agregar la nueva columna 'Estado'
-                    writer = csv.DictWriter(file, fieldnames=fieldnames)
-                    writer.writeheader()
-                    writer.writerows(datos_climaticos)
-
+                    # Crear un archivo CSV y escribir los datos
+                    with open('/opt/airflow/outputs/clima/datos_climaticos.csv', mode='w', newline='') as file:
+                        fieldnames = list(months_data[0].keys())  # Obtener los nombres de las columnas
+                        #fieldnames.append('Estado')  # Agregar la nueva columna 'Estado'
+                        writer = csv.DictWriter(file, fieldnames=fieldnames)
+                        writer.writeheader()
+                        writer.writerows(datos_climaticos)
 
             break
+
         except WebDriverException as e:
             print(f"Se produjo una excepción: {e}")
             attempts += 1
             print(f"Reintentando (Intento {attempts}/{max_attempts})...")
             driver.quit()
             continue
+
     if attempts == max_attempts:
-        print(f"Se alcanzó el número máximo de intentos")
+        print(f'Se alcanzó el número máximo de intentos')
         driver.quit()

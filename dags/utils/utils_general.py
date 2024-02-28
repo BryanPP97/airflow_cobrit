@@ -7,6 +7,8 @@ from utils.utils_nlp1 import *
 import pyodbc
 import json
 import warnings
+from airflow.hooks.S3_hook import S3Hook
+
 warnings.filterwarnings('ignore')
 
 def clean_folder(folder):
@@ -15,8 +17,6 @@ def clean_folder(folder):
         try:
             if os.path.isfile(file_path) or os.path.islink(file_path):
                 os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
@@ -249,3 +249,7 @@ def name_read():
     df_input['Nombre_Completo'] = df_input.apply(lambda row: ' '.join([row['Nombre'], row['Paterno'], row['Materno']]), axis = 1)
     df_input.to_csv('df_input.csv')
     return df_input
+
+def upload_to_s3(filename: str, key: str, bucket_name: str) -> None:
+    hook = S3Hook('S3-Connection')
+    hook.load_file(filename=filename, key=key, bucket_name=bucket_name, replace=True)

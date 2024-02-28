@@ -15,14 +15,16 @@ warnings.filterwarnings('ignore')
 
 def ift_automation():
     # Configura las opciones de Chrome para la descarga
+    #download_folder = "/opt/airflow/outputs/ift"
     chrome_options = Options()
     #chrome_options.add_argument('--headless')
     chrome_options.add_experimental_option("prefs", {
         "download.prompt_for_download": False,
-        "download.default_directory": "/opt/airflow/outputs/ift/",  # Utiliza la ubicación actual del script como carpeta de descarga
+        #"download.default_directory": download_folder,  # Utiliza la ubicación actual del script como carpeta de descarga
         "download.directory_upgrade": True,
-        "safebrowsing.enabled": False, # Desactiva la verificación de seguridad de descargas
+        "safebrowsing.enabled": True, # Desactiva la verificación de seguridad de descargas
         "profile.default_content_settings.popups":0,
+        "profile.default_content_setting_values.automatic_downloads": 2,
     })
 
     # Configuración para ingresar al explorador
@@ -40,8 +42,9 @@ def ift_automation():
     tiempo_transcurrido = 0
     archivo_zip = None
 
+    # Tu código existente para esperar a que el archivo ZIP aparezca...
     while tiempo_transcurrido < tiempo_espera:
-        archivos_en_carpeta = os.listdir("/opt/airflow/outputs/ift/")
+        archivos_en_carpeta = os.listdir("/opt/airflow/outputs/")
         for archivo in archivos_en_carpeta:
             if archivo.endswith('.zip'):
                 archivo_zip = archivo
@@ -53,10 +56,25 @@ def ift_automation():
         time.sleep(1)
         tiempo_transcurrido += 1
 
+    # Modificación para renombrar el archivo CSV extraído a 'ift.csv'
     if archivo_zip:
-        # Abre el archivo ZIP en modo de lectura
-        with zipfile.ZipFile(os.path.join("/opt/airflow/outputs/ift/", archivo_zip), 'r') as zf:
-            # Extrae todos los archivos y carpetas dentro del archivo ZIP en la carpeta de destino
-            zf.extractall("/opt/airflow/outputs/ift")
+        with zipfile.ZipFile(os.path.join("/opt/airflow/outputs/", archivo_zip), 'r') as zf:
+            # Extrae todos los archivos dentro del archivo ZIP
+            zf.extractall("/opt/airflow/outputs/")
+            
+            # Lista los archivos extraídos para encontrar el archivo CSV
+            for archivo in zf.namelist():
+                if archivo.endswith('.csv'):
+                    archivo_csv_original = archivo
+                    break
+            
+            # Ruta completa del archivo CSV original
+            ruta_archivo_csv_original = os.path.join("/opt/airflow/outputs/", archivo_csv_original)
+            
+            # Ruta completa del nuevo nombre del archivo CSV
+            ruta_nuevo_archivo_csv = os.path.join("/opt/airflow/outputs/", "ift.csv")
+            
+            # Renombra el archivo CSV extraído a 'ift.csv'
+            os.rename(ruta_archivo_csv_original, ruta_nuevo_archivo_csv)
 
     driver.quit()

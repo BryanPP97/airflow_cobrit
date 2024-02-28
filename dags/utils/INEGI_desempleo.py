@@ -10,17 +10,25 @@ import shutil
 from datetime import datetime
 from selenium.webdriver.common.action_chains import ActionChains
 import requests
+import os
 
 def INEGI_desempleo_scraper():
+
+    
+
+    # Ensure the download directory exists
+
     url = "https://www.inegi.org.mx/app/tabulados/default.html?nc=624"
     
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {
-    "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
-    "download.directory_upgrade": True,
-    "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
-    "download.default_directory":"/opt/airflow/outputs/INEGI/"
-})
+        "download.prompt_for_download": False,
+        #"download.default_directory": "/opt/airflow/outputs/INEGI/",  # Set to the dynamically determined path
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True,
+        "profile.default_content_settings.popups": 0,
+        "profile.default_content_setting_values.automatic_downloads": 2,
+    })
     # Configuración para ingresar al explorador
     #driver = webdriver.Chrome(options = chrome_options)
     remote_webdriver = 'remote_chromedriver'
@@ -33,7 +41,13 @@ def INEGI_desempleo_scraper():
     driver.quit()
     
 def data_transformation():
-    df = pd.read_csv("/opt/airflow/outputs/INEGI/Tabulado.csv")
+    path_archivo = "/opt/airflow/outputs/Tabulado.csv"
+
+    # Ajusta los permisos del archivo antes de leerlo
+    #os.chmod(path_archivo, 0o666)  # Establece los permisos a rw-rw-rw-
+
+    df = pd.read_csv(path_archivo)
+
     # Encuentra los índices donde comienzan los años en la columna 'Periodo'
     indices_anios = df[df['Periodo'].str.isnumeric()].index
     nuevo_df = df.T.iloc[1:].reset_index(drop=True)
@@ -53,7 +67,7 @@ def data_transformation():
 
     # Restablece el índice
     nuevo_df.reset_index(drop=True, inplace=True)
-    nuevo_df.to_csv("/opt/airflow/outputs/INEGI/Tabulado.csv", index = False)
+    nuevo_df.to_csv(path_archivo, index = False)
 
     #data_transformation()
     
