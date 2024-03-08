@@ -36,7 +36,7 @@ with DAG(
     cleaner = PythonOperator(
         task_id="cleaner",
         python_callable=clean_folder,
-        op_kwargs={'folder': '/opt/airflow/outputs/'}
+        op_kwargs={'folder': '/opt/airflow/output/'}
     )
     upload_to_s3 = PythonOperator(
         task_id='upload_to_s3',

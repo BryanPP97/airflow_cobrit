@@ -31,8 +31,8 @@ def gepard_automation():
     "download.prompt_for_download": False,  # Desactiva la ventana emergente de descarga
     "download.directory_upgrade": True,
     "safebrowsing.enabled": False,  # Desactiva la verificación de seguridad de descargas
-    "profile.default_content_settings.popups":0,
-    "download.default_directory":"/opt/airflow/outputs/Gepard/"
+    "profile.default_content_settings.popups":2,
+    "download.default_directory":"/home/seluser/Downloads/gepard"
     })
     
     # Configuración para ingresar al explorador
@@ -66,7 +66,9 @@ def gepard_automation():
 
 def process_sms():
     page = "Gepard"
-    path = '/opt/airflow/outputs/Gepard/Resultados.csv'
+    path = '/opt/airflow/outputs/gepard/Resultados.csv'
+
+    # This is the code to do the get_positive function
 
     ## Get last business day
     today = date.today()
@@ -89,3 +91,25 @@ def process_sms():
         cartera = key
         words = parsed_json.get(key)['words']
         get_positive(df_today, page, cartera, words)
+
+
+def generate_gepard_filename(**context):
+    """
+    Renames the original file to a new name based on the DAG's execution date.
+    The new filename and path are saved in XCom for other tasks to access.
+    """
+    # Get the execution date of the DAG from the context
+    execution_date = context['ds']
+    
+    # Path and original name of the file 
+    original_file_path = '/opt/airflow/outputs/gepard/Resultados.csv'  # Example
+    
+    # Format the execution date to construct the new filename
+    new_filename = f"mensajes_gepard_{execution_date}.csv"
+    new_file_path = f"/opt/airflow/outputs/gepard/{new_filename}"
+    
+    # Rename  the original file to the new path with the new name
+    os.rename(original_file_path, new_file_path)
+    
+    # Save the new filename and path in XCom for other tasks to access
+    context['ti'].xcom_push(key='new_file_path', value=new_file_path)

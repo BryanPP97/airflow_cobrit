@@ -51,7 +51,7 @@ with DAG(
         python_callable=upload_to_s3,
         op_kwargs={
             'filename': '/opt/airflow/outputs/shf/SHF_extract.csv',
-            'key': 'datos_climaticos.csv',
+            'key': 'shf.csv',
             'bucket_name': 'emi-data'
         }
     )

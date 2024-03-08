@@ -1,4 +1,4 @@
-FROM apache/airflow:2.7.1-python3.11
+FROM apache/airflow:latest
 COPY requirements.txt /
 RUN pip install --upgrade pip
 RUN pip install python-dotenv yagmail nltk pyodbc

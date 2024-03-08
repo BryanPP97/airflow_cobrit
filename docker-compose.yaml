@@ -84,7 +84,8 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/files:/opt/airflow/files
     - ${AIRFLOW_PROJ_DIR:-.}/audios:/opt/airflow/audios 
     - ${AIRFLOW_PROJ_DIR:-.}/outputs:/opt/airflow/downloads
-  user: "${AIRFLOW_UID:-50000}:0"
+  user: "${AIRFLOW_UID:-50000}:50001"
+
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -105,9 +106,14 @@ services:
     restart: always
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/outputs:/home/seluser/Downloads
+      - ${AIRFLOW_PROJ_DIR:-.}/outputs/gepard:/home/seluser/Downloads/gepard
+      - ${AIRFLOW_PROJ_DIR:-.}/outputs/marcatel:/home/seluser/Downloads/marcatel
+      - ${AIRFLOW_PROJ_DIR:-.}/outputs/inegi:/home/seluser/Downloads/inegi
+      - ${AIRFLOW_PROJ_DIR:-.}/outputs/ift:/home/seluser/Downloads/ift
     environment:
       - SE_NODE_MAX_SESSIONS=5
-    user: "${AIRFLOW_UID:-50000}:0"
+    user: "${AIRFLOW_UID:-50000}:50001"
+
 
   postgres:
     image: postgres:13

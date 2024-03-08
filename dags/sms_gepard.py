@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 import pendulum
 
 #import scrapers
-from utils.gepard import gepard_automation, process_sms
-from utils.utils_general import email, clean_folder
+from utils.gepard import gepard_automation, generate_gepard_filename
+from utils.utils_general import email, clean_folder, upload_to_s3
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
 
@@ -49,8 +49,8 @@ with DAG(
         python_callable=gepard_automation
         )
     processor = PythonOperator(
-        task_id='processor',
-        python_callable=process_sms
+        task_id='generate_gepard_filename',
+        python_callable=generate_gepard_filename
     )
     mailing = PythonOperator(
         task_id="mailing", 
@@ -60,7 +60,17 @@ with DAG(
     cleaner = PythonOperator(
         task_id="cleaner",
         python_callable=clean_folder,
-        op_kwargs={'folder': '/opt/airflow/outputs/Gepard/'}
+        op_kwargs={'folder': '/opt/airflow/outputs/gepard'}
     )
+    upload_to_s3 = PythonOperator(
+    task_id='upload_to_s3',
+    python_callable=upload_to_s3,  # Asegúrate de que esta función está correctamente definida e importada
+    op_kwargs={
+        # Corrige los nombres de las tareas en xcom_pull para que coincidan con el task_id correcto
+        'filename': "{{ ti.xcom_pull(task_ids='generate_gepard_filename', key='new_file_path') }}",
+        'key': "{{ ti.xcom_pull(task_ids='generate_gepard_filename', key='new_file_path').split('/')[-1] }}",
+        'bucket_name': 'emi-data'
+    },
+)
 
-    cleaner >> scraper >> processor >> mailing
+    cleaner >> scraper >> processor >> upload_to_s3

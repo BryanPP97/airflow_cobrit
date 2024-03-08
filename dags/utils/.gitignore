@@ -1,4 +1,4 @@
 *.csv
-scraper.ipynb
 *zip
 *.pdf
+__pycache__/

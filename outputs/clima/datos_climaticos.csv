@@ -11,3 +11,63 @@ monthIndex,monthDays,daysOfPrecip,rain,temp,tempMax,tempMin,windSpeed,feelsLike,
 10,31,10,51,18,26,11,9,17,56,48,248,Octubre,estado de aguascalientes
 11,30,5,25,15,24,7,9,14,55,37,221,Noviembre,estado de aguascalientes
 12,31,3,20,13,22,5,9,13,52,37,202,Diciembre,estado de aguascalientes
+1,31,2,7,13,21,5,8,12,41,26,155,Enero,estado de baja california
+2,28,2,5,15,24,8,9,15,40,25,199,Febrero,estado de baja california
+3,31,2,4,19,27,10,10,19,32,19,260,Marzo,estado de baja california
+4,30,4,6,22,30,13,12,22,30,15,314,Abril,estado de baja california
+5,31,3,4,26,34,16,12,26,27,10,346,Mayo,estado de baja california
+6,30,5,7,31,40,21,11,31,25,8,356,Junio,estado de baja california
+7,31,8,14,34,42,26,10,35,31,16,329,Julio,estado de baja california
+8,31,12,26,34,41,26,10,35,33,16,304,Agosto,estado de baja california
+9,30,7,23,31,38,23,9,31,33,11,262,Septiembre,estado de baja california
+10,31,4,10,24,33,16,9,24,32,13,219,Octubre,estado de baja california
+11,30,3,8,18,26,10,8,17,36,20,168,Noviembre,estado de baja california
+12,31,3,11,13,20,6,8,12,46,30,139,Diciembre,estado de baja california
+1,31,1,5,18,23,14,11,18,66,36,188,Enero,estado de baja california sur
+2,28,1,5,19,24,14,11,19,60,30,238,Febrero,estado de baja california sur
+3,31,1,6,21,27,15,11,21,55,24,288,Marzo,estado de baja california sur
+4,30,1,1,22,29,16,12,22,53,27,323,Abril,estado de baja california sur
+5,31,1,2,24,31,18,13,25,50,22,337,Mayo,estado de baja california sur
+6,30,4,14,27,33,21,13,28,52,21,335,Junio,estado de baja california sur
+7,31,12,59,29,34,24,12,31,56,41,310,Julio,estado de baja california sur
+8,31,16,124,29,34,25,11,32,63,46,286,Agosto,estado de baja california sur
+9,30,13,127,28,33,25,10,32,68,41,264,Septiembre,estado de baja california sur
+10,31,5,41,27,31,22,10,29,66,24,241,Octubre,estado de baja california sur
+11,30,2,9,23,28,19,10,24,67,25,204,Noviembre,estado de baja california sur
+12,31,2,10,20,24,16,10,20,69,36,179,Diciembre,estado de baja california sur
+1,31,8,43,23,27,20,14,24,77,40,185,Enero,estado de campeche
+2,28,5,22,24,28,20,14,25,73,37,220,Febrero,estado de campeche
+3,31,6,35,25,31,21,15,27,68,32,257,Marzo,estado de campeche
+4,30,7,33,28,33,23,15,30,66,30,289,Abril,estado de campeche
+5,31,13,88,28,34,24,15,31,66,39,284,Mayo,estado de campeche
+6,30,20,212,28,33,25,13,32,72,57,261,Junio,estado de campeche
+7,31,20,185,28,33,24,13,32,73,50,268,Julio,estado de campeche
+8,31,23,177,28,33,24,12,32,77,50,270,Agosto,estado de campeche
+9,30,24,212,27,32,24,11,31,79,59,255,Septiembre,estado de campeche
+10,31,19,140,26,30,23,12,29,77,52,233,Octubre,estado de campeche
+11,30,11,64,25,29,21,13,26,76,41,204,Noviembre,estado de campeche
+12,31,8,38,24,28,20,13,25,76,33,185,Diciembre,estado de campeche
+1,31,5,30,18,23,13,7,17,76,56,181,Enero,estado de chiapas
+2,28,5,22,19,26,14,7,19,71,49,222,Febrero,estado de chiapas
+3,31,5,22,21,28,15,7,21,63,42,265,Marzo,estado de chiapas
+4,30,8,40,23,31,17,7,23,59,43,282,Abril,estado de chiapas
+5,31,17,145,23,30,18,5,23,68,63,261,Mayo,estado de chiapas
+6,30,26,367,21,27,17,4,22,83,78,250,Junio,estado de chiapas
+7,31,27,348,21,28,16,4,21,84,73,257,Julio,estado de chiapas
+8,31,28,396,21,28,17,4,21,85,76,249,Agosto,estado de chiapas
+9,30,28,445,20,26,17,4,21,89,84,216,Septiembre,estado de chiapas
+10,31,19,235,20,25,16,6,20,87,77,192,Octubre,estado de chiapas
+11,30,8,59,18,24,15,7,18,83,66,184,Noviembre,estado de chiapas
+12,31,5,35,18,24,14,7,18,79,56,175,Diciembre,estado de chiapas
+1,31,3,11,9,17,2,11,8,42,36,175,Enero,estado de chihuahua
+2,28,2,6,12,21,4,13,11,31,30,228,Febrero,estado de chihuahua
+3,31,2,8,16,24,7,14,15,26,31,275,Marzo,estado de chihuahua
+4,30,3,8,20,28,10,15,19,23,30,319,Abril,estado de chihuahua
+5,31,4,11,23,32,14,14,23,25,29,333,Mayo,estado de chihuahua
+6,30,9,55,27,34,19,12,27,33,41,305,Junio,estado de chihuahua
+7,31,18,182,25,32,19,10,25,49,55,285,Julio,estado de chihuahua
+8,31,19,168,24,31,18,9,24,53,53,273,Agosto,estado de chihuahua
+9,30,15,157,22,28,16,8,22,57,50,236,Septiembre,estado de chihuahua
+10,31,5,28,19,27,11,10,19,45,29,225,Octubre,estado de chihuahua
+11,30,3,14,14,22,6,10,13,43,32,184,Noviembre,estado de chihuahua
+12,31,2,6,10,19,3,12,9,41,35,168,Diciembre,estado de chihuahua
