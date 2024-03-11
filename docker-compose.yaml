@@ -84,6 +84,8 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/files:/opt/airflow/files
     - ${AIRFLOW_PROJ_DIR:-.}/audios:/opt/airflow/audios 
     - ${AIRFLOW_PROJ_DIR:-.}/outputs:/opt/airflow/downloads
+
+    
   user: "${AIRFLOW_UID:-50000}:50001"
 
   depends_on:
@@ -110,9 +112,10 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}/outputs/marcatel:/home/seluser/Downloads/marcatel
       - ${AIRFLOW_PROJ_DIR:-.}/outputs/inegi:/home/seluser/Downloads/inegi
       - ${AIRFLOW_PROJ_DIR:-.}/outputs/ift:/home/seluser/Downloads/ift
+      - ${AIRFLOW_PROJ_DIR:-.}/outputs/ccc1:/home/seluser/Downloads/ccc1
     environment:
       - SE_NODE_MAX_SESSIONS=5
-    user: "${AIRFLOW_UID:-50000}:50001"
+    user: "${AIRFLOW_UID:-50000}:0"
 
 
   postgres:

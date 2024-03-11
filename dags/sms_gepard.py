@@ -41,7 +41,7 @@ with DAG(
     description="Sends email for positive sms using gepard data",
     start_date= datetime(year=2023, month=9, day=28, tzinfo=local_tz),
     #schedule_interval="0 9 * * 1-5",
-    schedule_interval="0 9-18 * * 1-5",
+    schedule_interval="@monthly",
     tags = ['sms']
 ) as dag:
     scraper = PythonOperator(
