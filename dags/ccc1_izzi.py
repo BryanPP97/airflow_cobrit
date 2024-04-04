@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import pendulum
 
 #import scrapers
-from utils.audios_cc1 import cc1_automation
+from utils.audios_cc1 import main
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
 
@@ -13,8 +13,8 @@ from airflow.operators.python_operator import PythonOperator
 default_args={
     'owner': 'cobrit',
     "depends_on_past": False,
-    "email": ["jmontan@coperva.com"],
-    "email_on_failure": True,
+    #"email": ["jmontan@coperva.com"],
+    #"email_on_failure": True,
     "email_on_retry": False,
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
@@ -45,7 +45,7 @@ with DAG(
 ) as dag:
     download = PythonOperator(
         task_id="download", 
-        python_callable=cc1_automation,
+        python_callable=main,
         op_kwargs={'cartera': '1752'}
     )
 

@@ -14,9 +14,9 @@ from airflow.operators.python_operator import PythonOperator
 default_args={
     'owner': 'cobrit',
     "depends_on_past": False,
-    "email": ["jmontan@coperva.com"],
-    "email_on_failure": True,
-    "email_on_retry": False,
+    #"email": ["jmontan@coperva.com"],
+    #"email_on_failure": True,
+    #"email_on_retry": False,
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
     # 'queue': 'bash_queue',

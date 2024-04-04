@@ -325,7 +325,7 @@ def rename_downloaded_file(folder_path):
 # Main Workflow
 def main(cartera):
     """
-    Main workflow for scraping data, processing it, and sending an email.
+    Main workflow for scraping data, processing it.
 
     :param cartera: The specific 'cartera' to scrape data for
     """
