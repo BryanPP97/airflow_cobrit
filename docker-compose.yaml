@@ -86,7 +86,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/outputs:/opt/airflow/downloads
 
     
-  user: "${AIRFLOW_UID:-50000}:50001"
+  user: "${AIRFLOW_UID:-50000}:0"
 
   depends_on:
     &airflow-common-depends-on
