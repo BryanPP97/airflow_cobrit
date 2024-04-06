@@ -38,6 +38,7 @@ def INEGI_desempleo_scraper():
     button = wait.until(EC.element_to_be_clickable((By.ID, "aCsv")))
     button.click()
     time.sleep(20)
+    print("Se extrae tabulado")
     driver.quit()
     
 def data_transformation():
