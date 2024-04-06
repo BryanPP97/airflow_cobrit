@@ -1,4 +1,4 @@
-name: Despliegue de Airflow
+name: Deploy to Ubuntu
 
 on:
   push:
@@ -6,32 +6,16 @@ on:
       - main
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker build . --file Dockerfile --tag mi_usuario/mi_app_airflow:${{ github.sha }}
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v1
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Push Docker image
-      run: docker push mi_usuario/mi_app_airflow:${{ github.sha }}
-
-    - name: SSH and Restart Airflow
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd path_to_your_airflow_deployment
-          docker-compose pull
-          docker-compose down
-          docker-compose up -d
+    - name: Deploy to Ubuntu
+      run: |
+        ssh -o StrictHostKeyChecking=no bryanpp@172.19.254.185 "cd /home/bryanpp/GITHUB/airflow_cobrit && git pull && docker-compose up -d"
