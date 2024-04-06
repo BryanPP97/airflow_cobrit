@@ -38,13 +38,9 @@ def INEGI_desempleo_scraper():
     button = wait.until(EC.element_to_be_clickable((By.ID, "aCsv")))
     button.click()
     time.sleep(20)
-<<<<<<< HEAD
     print("Se extrae tabulado")
-=======
-    print("Aquí se descarga")
->>>>>>> 2a4754d59266d979b185e803eff1f5fd7e595391
+
     driver.quit()
-    
 def data_transformation():
     path_archivo = "/opt/airflow/outputs/Tabulado.csv"
 
