@@ -23,7 +23,7 @@ def INEGI_desempleo_scraper():
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {
         "download.prompt_for_download": False,
-        #"download.default_directory": "/opt/airflow/outputs/INEGI/",  # Set to the dynamically determined path
+        "download.default_directory": "/opt/airflow/outputs/INEGI/",  # Set to the dynamically determined path
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True,
         "profile.default_content_settings.popups": 0,
@@ -38,7 +38,11 @@ def INEGI_desempleo_scraper():
     button = wait.until(EC.element_to_be_clickable((By.ID, "aCsv")))
     button.click()
     time.sleep(20)
+<<<<<<< HEAD
     print("Se extrae tabulado")
+=======
+    print("Aquí se descarga")
+>>>>>>> 2a4754d59266d979b185e803eff1f5fd7e595391
     driver.quit()
     
 def data_transformation():
