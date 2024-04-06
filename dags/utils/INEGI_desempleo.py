@@ -21,7 +21,7 @@ def INEGI_desempleo_scraper():
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {
         "download.prompt_for_download": False,
-        "download.default_directory": "/opt/airflow/outputs/INEGI/",  # Set to the dynamically determined path
+        "download.default_directory": "/opt/airflow/outputs/INEGI",  # Set to the dynamically determined path
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True,
         "profile.default_content_settings.popups": 0,
