@@ -18,4 +18,4 @@ jobs:
 
     - name: Deploy to Ubuntu
       run: |
-        ssh -o StrictHostKeyChecking=no bryanpp@your-ubuntu-ip "cd /home/bryanpp/GITHUB/airflow_cobrit && git pull && docker-compose up -d"
+        ssh -o StrictHostKeyChecking=no bryanpp@172.19.254.185 "cd /home/bryanpp/GITHUB/airflow_cobrit && git pull && docker-compose up -d"
